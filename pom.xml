@@ -30,6 +30,22 @@
             <version>${ktor_version}</version>
         </dependency>
         <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-server-content-negotiation-jvm</artifactId>
+            <version>${ktor_version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin.plugin.serialization</groupId>
+            <artifactId>org.jetbrains.kotlin.plugin.serialization.gradle.plugin</artifactId>
+            <version>1.8.20-Beta</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-serialization-kotlinx-json-jvm</artifactId>
+            <version>${ktor_version}</version>
+        </dependency>
+        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback_version}</version>
@@ -131,6 +147,14 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>

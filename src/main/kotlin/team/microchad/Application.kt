@@ -1,5 +1,6 @@
 package team.microchad
 
+import team.microchad.plugins.configureSerialization
 import io.ktor.server.application.*
 import team.microchad.plugins.*
 
@@ -9,4 +10,5 @@ fun main(args: Array<String>): Unit =
 @Suppress("unused") // application.conf references the main function. This annotation prevents the IDE from marking it as unused.
 fun Application.module() {
     configureRouting()
+    configureSerialization()
 }
