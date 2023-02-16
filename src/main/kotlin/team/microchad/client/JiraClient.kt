@@ -15,7 +15,8 @@ import org.apache.http.util.EntityUtils
 
 class JiraClient(_username: String, _password: String) {
     companion object {
-        private const val JIRA_API_BASE_URL = "tin-workshop.ddns.net:8080/rest/agile/1.0"
+        private const val JIRA_API_BASE_URL = "tin-workshop.ddns.net:8080"
+        private const val JIRA_API_PATH = "rest/agile/1.0"
         private const val JIRA_ISSUE_ENDPOINT = "issue"
     }
     private val botUsername: String = _username
@@ -26,7 +27,7 @@ class JiraClient(_username: String, _password: String) {
             basic {
                 sendWithoutRequest { true }
                 credentials {
-                    BasicAuthCredentials(username = botUsername, password = _password)
+                    BasicAuthCredentials(username = botUsername, password = botPassword)
                 }
             }
         }
@@ -36,12 +37,9 @@ class JiraClient(_username: String, _password: String) {
 
         val response: HttpResponse = client.get() {
             url {
-                headers {
-                    append("JSESSIONID", "41884CDB3D7D01938EAB4C16BFB9B768")
-                }
                 protocol = URLProtocol.HTTP
                 host = JIRA_API_BASE_URL
-                appendPathSegments(JIRA_ISSUE_ENDPOINT, issueKey)
+                appendPathSegments(JIRA_API_PATH, JIRA_ISSUE_ENDPOINT, issueKey)
             }
         }
         return response.bodyAsText()
