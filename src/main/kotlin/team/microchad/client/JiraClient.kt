@@ -4,9 +4,12 @@ import io.ktor.client.*
 import io.ktor.client.engine.java.*
 import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
+import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.json.Json
 import java.net.URI
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.client.utils.URIBuilder
@@ -30,6 +33,13 @@ class JiraClient(_username: String, _password: String) {
                     BasicAuthCredentials(username = botUsername, password = botPassword)
                 }
             }
+        }
+        install(ContentNegotiation) {
+            json(Json {
+                prettyPrint = true
+                isLenient = true
+                ignoreUnknownKeys = true
+            })
         }
     }
 

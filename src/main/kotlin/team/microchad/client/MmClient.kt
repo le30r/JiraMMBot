@@ -33,20 +33,21 @@ class MmClient(private val _accessToken: String) {
             json(Json {
                 prettyPrint = true
                 isLenient = true
+                ignoreUnknownKeys = true
             })
         }
 
 
     }
 
-    suspend fun getUsers(): String {
+    suspend fun getUsers(): User {
         return client.get {
             url {
                 protocol = URLProtocol.HTTP
                 host = MM_API_BASE_URL
                 appendPathSegments(MM_API_VERSION, MM_USERS, "me")
             }
-        }.bodyAsText()
+        }.body()
     }
 
 }
