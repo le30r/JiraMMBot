@@ -20,7 +20,7 @@ fun Application.module() {
     val botPassword: String = environment.config.tryGetString("bot.auth.password") ?: ""
     val mmBotToken: String = environment.config.tryGetString("bot.auth.mmtoken") ?: ""
     runBlocking {
-       // println(JiraClient(botUsername, botPassword).getIssue("MMJIR-5"))
-        println(MmClient(mmBotToken).getUsers())
+        println(JiraClient(botUsername, botPassword).getIssue("MMJIR-5").fields.description)
+       // println(MmClient(mmBotToken).getUsers())
     }
 }
