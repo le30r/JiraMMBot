@@ -7,11 +7,10 @@ import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
-import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
-import team.microchad.dto.mm.User
+import team.microchad.dto.mm.UserDto
 
 
 class MmClient(private val _accessToken: String) {
@@ -40,7 +39,7 @@ class MmClient(private val _accessToken: String) {
 
     }
 
-    suspend fun getUsers(): User {
+    suspend fun getUsers(): UserDto {
         return client.get {
             url {
                 protocol = URLProtocol.HTTP

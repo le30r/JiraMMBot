@@ -1,4 +1,4 @@
-package team.microchad.model.dao
+package team.microchad.model.repositories
 
 import org.jetbrains.exposed.sql.*
 import team.microchad.model.entities.Project
@@ -16,15 +16,15 @@ class ProjectRepository : CrudRepository<Project> {
             .firstOrNull()
     }
 
-    override suspend fun create(name: String): Project? = dbQuery {
+    override suspend fun create(entity: Project): Project? = dbQuery {
         val statement = Projects.insert {
-            it[Projects.name] = name
+            it[name] = entity.name
         }
         statement.resultedValues?.firstOrNull()?.let(::mapRowToProject)
     }
 
-    override suspend fun update(id: Long, name: String): Boolean = dbQuery {
-        Projects.update({ Projects.id eq id }) { it[Projects.name] = name } > 0
+    override suspend fun update(id: Long, entity: Project): Boolean = dbQuery {
+        Projects.update({ Projects.id eq id }) { it[name] = entity.name } > 0
     }
 
     override suspend fun delete(id: Long): Boolean = dbQuery {
