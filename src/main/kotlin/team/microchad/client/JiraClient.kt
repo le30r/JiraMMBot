@@ -6,10 +6,13 @@ import io.ktor.client.engine.java.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
+import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.observer.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.json.Json
 import team.microchad.dto.jira.JiraJqlResponse
 
 class JiraClient(_username: String, _password: String) {
@@ -31,9 +34,12 @@ class JiraClient(_username: String, _password: String) {
                 }
             }
         }
-        Charsets {
-            register(Charsets.UTF_8)
-            sendCharset = Charsets.UTF_8
+        install(ContentNegotiation) {
+            json(Json {
+                prettyPrint = true
+                isLenient = true
+                ignoreUnknownKeys = true
+            })
         }
 
     }
