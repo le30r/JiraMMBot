@@ -12,15 +12,16 @@ import org.apache.http.client.methods.HttpGet
 import org.apache.http.client.utils.URIBuilder
 import org.apache.http.impl.client.HttpClients
 import org.apache.http.util.EntityUtils
+import team.microchad.plugins.Secrets
 
-class JiraClient(_username: String, _password: String) {
+class JiraClient {
     companion object {
         private const val JIRA_API_BASE_URL = "tin-workshop.ddns.net:8080"
         private const val JIRA_API_PATH = "rest/agile/1.0"
         private const val JIRA_ISSUE_ENDPOINT = "issue"
     }
-    private val botUsername: String = _username
-    private val botPassword: String = _password
+    private val botUsername: String = Secrets.botUsername
+    private val botPassword: String = Secrets.botPassword
 
     private val client = HttpClient(Java) {
         install(Auth) {
