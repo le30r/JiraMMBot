@@ -19,9 +19,9 @@ fun Application.module() {
     configureSerialization()
     val botUsername: String = environment.config.tryGetString("bot.auth.username") ?: ""
     val botPassword: String = environment.config.tryGetString("bot.auth.password") ?: ""
-    val mmBotToken: String = environment.config.tryGetString("bot.auth.mmtoken") ?: ""
+    //val mmBotToken: String = environment.config.tryGetString("bot.auth.mmtoken") ?: ""
     runBlocking {
-        println(JiraClient(botUsername, botPassword).getIssue("MMJIR-5").fields.description)
+        println(JiraClient(botUsername, botPassword).getIssue("MMJIR-5"))
        // println(MmClient(mmBotToken).getUsers())
     }
     Database.connect("jdbc:postgresql://localhost:5432/mmbot", "org.postgresql.Driver", "postgres", "0000")
