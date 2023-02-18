@@ -6,6 +6,7 @@ import io.ktor.server.config.*
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.Database
 import team.microchad.client.JiraClient
+import team.microchad.client.MmClient
 import team.microchad.plugins.*
 
 fun main(args: Array<String>): Unit =
@@ -18,8 +19,10 @@ fun Application.module() {
     configureSerialization()
     val botUsername: String = environment.config.tryGetString("bot.auth.username") ?: ""
     val botPassword: String = environment.config.tryGetString("bot.auth.password") ?: ""
+    val mmBotToken: String = environment.config.tryGetString("bot.auth.mmtoken") ?: ""
     runBlocking {
-        println(JiraClient(botUsername, botPassword).getIssue("MMJIR-5"))
+        println(JiraClient(botUsername, botPassword).getIssue("MMJIR-5").fields.description)
+       // println(MmClient(mmBotToken).getUsers())
     }
     Database.connect("jdbc:postgresql://localhost:5432/mmbot", "org.postgresql.Driver", "postgres", "0000")
 }

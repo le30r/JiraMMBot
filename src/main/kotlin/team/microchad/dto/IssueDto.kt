@@ -1,13 +1,19 @@
 package team.microchad.dto
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+//import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.typesafe.config.Optional
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.SerialName
 import team.microchad.config.JiraLocalDateTimeDeserializer
 import java.time.LocalDateTime
 
+@kotlinx.serialization.Serializable
 data class JiraIssue(
     val id: Long,
     val self: String,
     val key: String,
+
+
     val fields: IssueFields
 ) {
     val versionsAsString: String
@@ -58,9 +64,9 @@ data class JiraIssue(
         get() {
             return fields.attachment.isNotEmpty()
         }
-
 }
 
+@kotlinx.serialization.Serializable
 data class IssueFields(
     val summary: String,
 
@@ -70,20 +76,23 @@ data class IssueFields(
 
     val creator: User,
 
-    val issueType: IssueType,
+
+    val issueType: IssueType? = null,
 
     val fixVersions: Array<Version> = emptyArray(),
 
     val attachment: Array<Attachment> = emptyArray(),
 
-    @field:JsonDeserialize(using = JiraLocalDateTimeDeserializer::class)
+    //@field:kotlinx.serialization.Serializable(JiraLocalDateTimeDeserializer::class)
+    @kotlinx.serialization.Serializable(with = JiraLocalDateTimeDeserializer::class)
     val created: LocalDateTime,
 
     val reporter: User?,
 
     val assignee: User?,
 
-    @field:JsonDeserialize(using = JiraLocalDateTimeDeserializer::class)
+    //@field:JsonDeserialize(using = JiraLocalDateTimeDeserializer::class)
+    @kotlinx.serialization.Serializable(with = JiraLocalDateTimeDeserializer::class)
     val updated: LocalDateTime?,
 
     val status: Status,
@@ -96,11 +105,14 @@ data class IssueFields(
 
     val watches: Watchers?
 )
+
+@kotlinx.serialization.Serializable
 data class IssueType(
     val name: String,
     val description: String
 )
 
+@kotlinx.serialization.Serializable
 data class Watchers(
     val self: String,
     val watchCount: Int,

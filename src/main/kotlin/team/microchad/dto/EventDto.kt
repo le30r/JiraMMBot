@@ -1,25 +1,23 @@
 package team.microchad.dto
 
-import com.fasterxml.jackson.annotation.JsonAlias
-import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import kotlinx.serialization.SerialName
 import team.microchad.config.JiraLocalDateTimeDeserializer
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 
 enum class WebHookEvent {
-    @JsonProperty("comment_created")
+    @SerialName("comment_created")
     COMMENT_CREATED,
-    @JsonProperty("comment_updated")
+    @SerialName("comment_updated")
     COMMENT_UPDATED,
-    @JsonProperty("comment_deleted")
+    @SerialName("comment_deleted")
     COMMENT_DELETED,
-    @JsonProperty("jira:issue_updated")
+    @SerialName("jira:issue_updated")
     JIRA_ISSUE_UPDATED,
-    @JsonProperty("jira:issue_created")
+    @SerialName("jira:issue_created")
     JIRA_ISSUE_CREATED,
-    @JsonProperty("jira:issue_deleted")
+    @SerialName("jira:issue_deleted")
     JIRA_ISSUE_DELETED;
 
     companion object {
@@ -39,35 +37,35 @@ enum class WebHookEvent {
 }
 
 enum class IssueEventTypeName {
-    @JsonProperty("issue_commented")
+    @SerialName("issue_commented")
     ISSUE_COMMENTED,
 
-    @JsonProperty("issue_created")
+    @SerialName("issue_created")
     ISSUE_CREATED,
 
-    @JsonProperty("issue_generic")
+    @SerialName("issue_generic")
     ISSUE_GENERIC,
 
-    @JsonProperty("issue_updated")
+    @SerialName("issue_updated")
     ISSUE_UPDATED,
 
-    @JsonProperty("issue_comment_edited")
+    @SerialName("issue_comment_edited")
     ISSUE_COMMENT_EDITED,
 
-    @JsonProperty("issue_comment_deleted")
+    @SerialName("issue_comment_deleted")
     ISSUE_COMMENT_DELETED,
 
-    @JsonProperty("issue_assigned")
+    @SerialName("issue_assigned")
     ISSUE_ASSIGNED,
 
-    @JsonProperty("issue_reopened")
+    @SerialName("issue_reopened")
     ISSUE_REOPENED
 }
 
 data class Event(
     val webhookEvent: WebHookEvent,
 
-    @JsonAlias("issue_event_type_name")
+    @SerialName("issue_event_type_name")
     val issueEventTypeName: IssueEventTypeName?,
 
     val timestamp: Long,
@@ -114,7 +112,7 @@ data class ChangelogItem(
 
     val fromString: String?,
 
-    @JsonAlias("toString")
+    @SerialName("toString")
     val newString: String?
 ) {
     val changed: Boolean
@@ -143,6 +141,7 @@ data class ChangelogItem(
         }
 }
 
+@kotlinx.serialization.Serializable
 data class User(
     val name: String,
 
@@ -154,17 +153,18 @@ data class Comment(
 
     val author: User?,
 
-    @field:JsonDeserialize(using = JiraLocalDateTimeDeserializer::class)
+    //@field:JsonDeserialize(using = JiraLocalDateTimeDeserializer::class)
+    @kotlinx.serialization.Serializable(with = JiraLocalDateTimeDeserializer::class)
     val created: LocalDateTime,
 
     val updateAuthor: User?,
 
     val self: String,
 
-    @field:JsonDeserialize(using = JiraLocalDateTimeDeserializer::class)
     val updated: LocalDateTime?
 )
 
+@kotlinx.serialization.Serializable
 data class Project(
     val id: Long,
 
@@ -175,18 +175,21 @@ data class Project(
     val name: String
 )
 
+@kotlinx.serialization.Serializable
 data class JiraComponent(
     val self: String,
 
     val name: String
 )
 
+@kotlinx.serialization.Serializable
 data class Attachment(
     val filename: String,
 
     val content: String
 )
 
+@kotlinx.serialization.Serializable
 data class Version(
     val id: Long,
 
@@ -201,6 +204,7 @@ data class Version(
     val released: Boolean
 )
 
+@kotlinx.serialization.Serializable
 data class Status(
     val id: String,
 
@@ -209,6 +213,7 @@ data class Status(
     val name: String
 )
 
+@kotlinx.serialization.Serializable
 data class Priority(
     val name: String,
 

@@ -1,17 +1,22 @@
 package team.microchad.client
 
 import io.ktor.client.*
+import io.ktor.client.call.*
 import io.ktor.client.engine.java.*
 import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
+import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.json.Json
 import java.net.URI
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.client.utils.URIBuilder
 import org.apache.http.impl.client.HttpClients
 import org.apache.http.util.EntityUtils
+import team.microchad.dto.JiraIssue
 
 class JiraClient(_username: String, _password: String) {
     companion object {
@@ -31,9 +36,16 @@ class JiraClient(_username: String, _password: String) {
                 }
             }
         }
+        install(ContentNegotiation) {
+            json(Json {
+                prettyPrint = true
+                isLenient = true
+                ignoreUnknownKeys = true
+            })
+        }
     }
 
-    suspend fun getIssue(issueKey: String): String {
+    suspend fun getIssue(issueKey: String): JiraIssue {
 
         val response: HttpResponse = client.get() {
             url {
@@ -42,6 +54,6 @@ class JiraClient(_username: String, _password: String) {
                 appendPathSegments(JIRA_API_PATH, JIRA_ISSUE_ENDPOINT, issueKey)
             }
         }
-        return response.bodyAsText()
+        return response.body()
     }
 }
