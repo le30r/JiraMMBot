@@ -4,6 +4,7 @@ import team.microchad.plugins.configureSerialization
 import io.ktor.server.application.*
 import io.ktor.server.config.*
 import kotlinx.coroutines.runBlocking
+import org.jetbrains.exposed.sql.Database
 import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
 import team.microchad.plugins.*
@@ -23,4 +24,5 @@ fun Application.module() {
         println(JiraClient(botUsername, botPassword).getIssue("MMJIR-5").fields.description)
        // println(MmClient(mmBotToken).getUsers())
     }
+    Database.connect("jdbc:postgresql://localhost:5432/mmbot", "org.postgresql.Driver", "postgres", "0000")
 }
