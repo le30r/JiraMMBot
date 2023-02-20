@@ -10,5 +10,4 @@ data class Issue(
     var key: String,
     @JsonNames("fields")
     var fields: Field
-) {
-}
+)

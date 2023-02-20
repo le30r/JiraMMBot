@@ -5,5 +5,4 @@ data class OutgoingMsg(
     val channel: String,
     val text: String,
     val username: String
-) {
-}
+)
