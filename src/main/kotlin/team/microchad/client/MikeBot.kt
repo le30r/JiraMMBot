@@ -12,7 +12,8 @@ import team.microchad.dto.mm.OutgoingMsg
 
 class MikeBot {
     companion object {
-        private const val MM_WEBHOOK = "http://tin-workshop.ddns.net:8065/hooks/"
+        private const val MM_BASE_WEBHOOK = "tin-workshop.ddns.net:8065/hooks"
+        private const val MM_WEBHOOK_TOKEN = "5mj4ntowb7n3ddkb8hqbuw8sde"
     }
 
     private val client = HttpClient(Java) {
@@ -23,21 +24,18 @@ class MikeBot {
                 ignoreUnknownKeys = true
             })
         }
-
     }
 
-//    private var request: HttpRequest = {
-//
-//    }
-
-    suspend fun parrot(msg: OutgoingMsg) {
-        val response: HttpResponse = client.post(MM_WEBHOOK.plus("5mj4ntowb7n3ddkb8hqbuw8sde")) {
-
-
-            headers {
-                append(HttpHeaders.ContentType, "application/json")
-            }
-            setBody(msg)
+    suspend fun send(msg: OutgoingMsg): HttpResponse = client.request {
+        url{
+            protocol = URLProtocol.HTTP
+            host = MM_BASE_WEBHOOK
+            appendPathSegments(MM_WEBHOOK_TOKEN)
         }
+        method = HttpMethod.Post
+        headers {
+            append(HttpHeaders.ContentType, ContentType.Application.Json)
+        }
+        setBody(msg)
     }
 }
