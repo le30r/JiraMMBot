@@ -14,14 +14,14 @@ fun main(args: Array<String>): Unit =
 
 @Suppress("unused") // application.conf references the main function. This annotation prevents the IDE from marking it as unused.
 fun Application.module() {
+    configureDI()
+    getSecrets()
     configureRouting()
     configureSerialization()
-    val botUsername: String = environment.config.tryGetString("bot.auth.username") ?: ""
-    val botPassword: String = environment.config.tryGetString("bot.auth.password") ?: ""
-    //val mmBotToken: String = environment.config.tryGetString("bot.auth.mmtoken") ?: ""
-    runBlocking {
-        println(JiraClient(botUsername, botPassword).getIssue("MMJIR-5"))
-       // println(MmClient(mmBotToken).getUsers())
-    }
-    Database.connect("jdbc:postgresql://localhost:5432/mmbot", "org.postgresql.Driver", "postgres", "0000")
+    configDatabase()
 }
+
+
+
+
+

@@ -9,19 +9,22 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import team.microchad.plugins.Secrets
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import team.microchad.dto.jira.JiraJqlResponse
 
-class JiraClient(_username: String, _password: String) {
+
+class JiraClient {
     companion object {
         private const val JIRA_API_BASE_URL = "tin-workshop.ddns.net:8080"
         private const val JIRA_API_PATH = "rest/api/2/search"
         private const val JIRA_JQL = "jql="
     }
 
-    private val botUsername: String = _username
-    private val botPassword: String = _password
+    private val botUsername: String = Secrets.botUsername
+    private val botPassword: String = Secrets.botPassword
+
 
     private val client = HttpClient(Java) {
         install(Auth) {

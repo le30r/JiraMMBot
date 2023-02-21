@@ -33,10 +33,9 @@ class MmClient(private val _accessToken: String) {
                 prettyPrint = true
                 isLenient = true
                 ignoreUnknownKeys = true
+
             })
         }
-
-
     }
 
     suspend fun getUsers(): User {
@@ -46,6 +45,7 @@ class MmClient(private val _accessToken: String) {
                 host = MM_API_BASE_URL
                 appendPathSegments(MM_API_VERSION, MM_USERS, "me")
             }
+
         }.body()
     }
 
