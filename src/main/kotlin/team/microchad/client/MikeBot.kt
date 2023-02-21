@@ -26,7 +26,7 @@ class MikeBot {
         }
     }
 
-    suspend fun send(msg: OutgoingMsg): HttpResponse = client.request() {
+    suspend fun send(msg: OutgoingMsg): HttpResponse = client.request {
         url{
             protocol = URLProtocol.HTTP
             host = MM_BASE_WEBHOOK

@@ -17,8 +17,8 @@ fun Application.configureRouting() {
         }
         post("/") {
             var incomingMsg = call.receive<IncomingMsg>()
-            val username = incomingMsg.user_name;
-            val status = "done";
+            val username = incomingMsg.user_name
+            val status = "done"
             var jiraJqlResponse = JiraClient("mrsaloed", "root").getIssues(username, status)
             var outgoingMsg = OutgoingMsg(text = jiraJqlResponse.toString(), channel = incomingMsg.channel_name, username = incomingMsg.user_name.plus("-").plus(status))
             MikeBot().send(outgoingMsg)

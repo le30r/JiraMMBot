@@ -4,5 +4,4 @@ package team.microchad.dto.jira
 data class Field(
     var summary: String,
     var updated: String, //TODO исправить представление даты
-) {
-}
+)

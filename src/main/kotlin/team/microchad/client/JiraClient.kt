@@ -3,11 +3,9 @@ package team.microchad.client
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.java.*
-import io.ktor.client.plugins.*
 import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
 import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.observer.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
@@ -42,11 +40,19 @@ class JiraClient(_username: String, _password: String) {
             })
         }
 
+        install(ContentNegotiation) {
+            json(Json {
+                prettyPrint = true
+                isLenient = true
+                ignoreUnknownKeys = true
+            })
+        }
+
     }
 
     suspend fun getIssue(issueKey: String): String {
 
-        val response: HttpResponse = client.get() {
+        val response: HttpResponse = client.get {
             url {
                 protocol = URLProtocol.HTTP
                 host = JIRA_API_BASE_URL
@@ -57,7 +63,7 @@ class JiraClient(_username: String, _password: String) {
     }
 
     suspend fun getIssues(username: String, status: String): JiraJqlResponse {
-        val response: HttpResponse = client.get() {
+        val response: HttpResponse = client.get {
             url {
                 protocol = URLProtocol.HTTP
                 host = JIRA_API_BASE_URL
