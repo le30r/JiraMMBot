@@ -36,7 +36,6 @@ class OutgoingMsgConstructor(var response: JiraJqlResponse, var incomingMsg: Inc
         }
     }
 
-
     private fun italics(msg: String): String = "_${msg}_"
 
     private fun bold(msg: String): String = "**${msg}**"

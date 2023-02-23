@@ -11,7 +11,7 @@ import team.microchad.dto.mm.IncomingMsg
 
 
 fun Application.configureRouting() {
-    val mikeBot: MmClient by inject<MmClient>()
+    val mikeBot: MmClient by inject()
     routing {
 
         get("/") {
@@ -19,6 +19,10 @@ fun Application.configureRouting() {
         }
         post("/") {
             var incomingMsg = call.receive<IncomingMsg>()
+
+
+
+
 //            val username = incomingMsg.user_name
 //            val status = MsgService(incomingMsg).getStatus()
 //            var jiraJqlResponse = JiraClient().getIssues(username, status)
