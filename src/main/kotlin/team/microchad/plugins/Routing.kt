@@ -24,7 +24,11 @@ fun Application.configureRouting() {
             val username = incomingMsg.user_name
             val status = "done"
             var jiraJqlResponse = JiraClient().getIssues(username, status)
-            var outgoingMsg = OutgoingMsg(text = jiraJqlResponse.toString(), channel = incomingMsg.channel_name, username = incomingMsg.user_name.plus("-").plus(status))
+            var outgoingMsg = OutgoingMsg(
+                text = jiraJqlResponse.toString(),
+                channel = incomingMsg.channel_name,
+                username = incomingMsg.user_name.plus("-").plus(status)
+            )
             MikeBot().send(outgoingMsg)
         }
     }
