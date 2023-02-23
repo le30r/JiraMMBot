@@ -1,4 +1,5 @@
 package team.microchad.utils
 
-infix fun String.toUrl(string: String): String =
-    string.replace(" ","%20").replace("\"", "%22")
+fun String.toUrl(): String =
+    replace(" ","%20")
+        .replace("\"", "%22")

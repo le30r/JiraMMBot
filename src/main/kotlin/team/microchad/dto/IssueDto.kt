@@ -1,12 +1,11 @@
 package team.microchad.dto
 
 //import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import com.typesafe.config.Optional
-import kotlinx.serialization.Contextual
-import kotlinx.serialization.SerialName
-import team.microchad.config.JiraLocalDateTimeDeserializer
+import team.microchad.utils.JiraLocalDateTimeDeserializer
 import java.time.LocalDateTime
 
+
+//TODO Refactor!
 @kotlinx.serialization.Serializable
 data class JiraIssue(
     val id: Long,

@@ -1,9 +1,6 @@
 package team.microchad.model.entities
 
-import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Table
-import team.microchad.model.entities.Projects.autoIncrement
-import java.util.concurrent.locks.LockSupport
 
 data class Issue(
     val id: Long,

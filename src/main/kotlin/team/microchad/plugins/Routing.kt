@@ -11,7 +11,7 @@ import team.microchad.dto.mm.IncomingMsg
 
 
 fun Application.configureRouting() {
-    val mikeBot: MmClient by inject<MmClient>()
+    val mikeBot: MmClient by inject()
     routing {
 
         get("/") {
@@ -19,12 +19,13 @@ fun Application.configureRouting() {
         }
         post("/") {
             var incomingMsg = call.receive<IncomingMsg>()
-//            val username = incomingMsg.user_name
-//            val status = MsgService(incomingMsg).getStatus()
-//            var jiraJqlResponse = JiraClient().getIssues(username, status)
-//            var outgoingMsg1 = OutgoingMsgConstructor(jiraJqlResponse, incomingMsg).getFormattedMessage()
-//            var outgoingMsg = OutgoingMsg(text = outgoingMsg1, channel = incomingMsg.channel_name, username = incomingMsg.user_name.plus("-").plus(status))
-//            MikeBot().send(outgoingMsg)
+
+            //TODO Описание работы
+            // parse jql from incoming msg using msgController. return Jql
+            // send jql using JiraClient. If all OK get JiraResponse and create outgoing msg
+            // else if some problems create msg with problem description
+            // send msg using mmClient
+
             MessageController().chooseCommand(incomingMsg)
 
         }
