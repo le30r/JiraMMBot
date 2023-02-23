@@ -10,6 +10,8 @@ import team.microchad.client.JiraClient
 import team.microchad.client.MikeBot
 import team.microchad.dto.mm.IncomingMsg
 import team.microchad.dto.mm.OutgoingMsg
+import team.microchad.service.MsgService
+import team.microchad.service.OutgoingMsgConstructor
 
 
 fun Application.configureRouting() {
@@ -22,9 +24,10 @@ fun Application.configureRouting() {
         post("/") {
             var incomingMsg = call.receive<IncomingMsg>()
             val username = incomingMsg.user_name
-            val status = "done"
+            val status = MsgService(incomingMsg).getStatus()
             var jiraJqlResponse = JiraClient().getIssues(username, status)
-            var outgoingMsg = OutgoingMsg(text = jiraJqlResponse.toString(), channel = incomingMsg.channel_name, username = incomingMsg.user_name.plus("-").plus(status))
+            var outgoingMsg1 = OutgoingMsgConstructor(jiraJqlResponse, incomingMsg).getFormattedMessage()
+            var outgoingMsg = OutgoingMsg(text = outgoingMsg1, channel = incomingMsg.channel_name, username = incomingMsg.user_name.plus("-").plus(status))
             MikeBot().send(outgoingMsg)
         }
     }

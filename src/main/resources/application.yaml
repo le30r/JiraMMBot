@@ -9,3 +9,4 @@ bot:
     username: $BOT_USERNAME
     password: $BOT_PASSWORD
     mmtoken: $MM_TOKEN
+  key-word: stats

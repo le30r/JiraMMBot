@@ -13,10 +13,9 @@ import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
 import team.microchad.client.JiraClient
 import team.microchad.client.MikeBot
-import team.microchad.model.dao.CrudRepository
-import team.microchad.model.dao.ProjectRepository
 import team.microchad.model.entities.Project
 import team.microchad.model.entities.Projects
+import team.microchad.model.repositories.CrudRepository
 
 fun Application.configureDI() {
     install(Koin) {
@@ -30,9 +29,6 @@ val mmBotModule = module {
     factory {
         MikeBot()
     }
-   singleOf(::ProjectRepository) {
-       bind<CrudRepository<Project>>()
-       createdAtStart()
-   }
+
 
 }
