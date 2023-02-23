@@ -1,9 +1,10 @@
 package team.microchad.controllers
 
 import team.microchad.client.JiraClient
-import team.microchad.client.MikeBot
+import team.microchad.client.MmClient
 import team.microchad.dto.mm.IncomingMsg
 import team.microchad.dto.mm.OutgoingMsg
+import team.microchad.service.OutgoingMsgConstructor
 
 class MessageController {
 
@@ -20,18 +21,23 @@ class MessageController {
 
     suspend fun chooseCommand(incomingMsg: IncomingMsg) {
         val message = incomingMsg.text.split(" ")
-        when (message[0]) {
+        when (message[1]) {
             HELP_COMMAND -> sendBack(incomingMsg, HELP_MSG)
             JQL_COMMAND -> return
             ISSUES_COMMAND -> {
-                if (message.size > 3) JiraClient().getIssues(message[1], message[2])
+                if (message.size >= 4) {
+                    var jiraJqlResponse = JiraClient().getIssues(message[2], message[3])
+                    var outgoingMsg1 = OutgoingMsgConstructor(jiraJqlResponse, incomingMsg).getFormattedMessage()
+                    sendBack(incomingMsg, outgoingMsg1)
+                }
                 else sendBack(incomingMsg, PARAM_COUNT_EXCEPTION)
             }
         }
     }
 
     private suspend fun sendBack(incomingMsg: IncomingMsg, text: String) {
-        MikeBot().send(
+
+        MmClient().send(
             OutgoingMsg(
                 text = text,
                 channel = incomingMsg.channel_name,

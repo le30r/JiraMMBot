@@ -27,14 +27,12 @@ class OutgoingMsgConstructor(var response: JiraJqlResponse, var incomingMsg: Inc
     }
 
     private fun setTableHeader() {
-        outgoingMessage = outgoingMessage.plus(
-            "|Summary|Updated|\n|:----:|:----:|\n"
-        )
+        outgoingMessage += "|Summary|Updated|\n|:----:|:----:|\n"
     }
 
     private fun setTableRows(issues: Array<Issue>) {
         for (issue in issues) {
-            outgoingMessage = outgoingMessage.plus("|${issue.fields.summary}|${issue.fields.updated}|\n")
+            outgoingMessage +="|${issue.fields.summary}|${issue.fields.updated}|\n"
         }
     }
 
@@ -54,6 +52,5 @@ class OutgoingMsgConstructor(var response: JiraJqlResponse, var incomingMsg: Inc
     private fun h2(msg: String): String = "### $msg"
 
     private fun h3(msg: String): String = "#### $msg"
-
 
 }
