@@ -1,4 +1,4 @@
-package team.microchad.config
+package team.microchad.utils
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -6,6 +6,7 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -21,4 +22,3 @@ class JiraLocalDateTimeDeserializer : KSerializer<LocalDateTime> {
     }
 
 }
-//    LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ"))

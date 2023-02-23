@@ -1,4 +1,5 @@
 package team.microchad.exceptions
 
-class JiraBadRequestException(message:String): Exception(message) {
-}
+import org.apache.http.HttpException
+
+class JiraBadRequestException(message:String): HttpException(message)

@@ -4,7 +4,7 @@ import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
 import team.microchad.dto.mm.IncomingMsg
 import team.microchad.dto.mm.OutgoingMsg
-import team.microchad.service.MarkdownMessage
+
 
 class MessageController {
 
@@ -26,7 +26,7 @@ class MessageController {
             JQL_COMMAND -> return
             ISSUES_COMMAND -> {
                 if (message.size >= 4) {
-                    var jiraJqlResponse = JiraClient().getIssues(message[2], message[3])
+                    var jiraJqlResponse = JiraClient().sendJql(message[2], message[3])
                    // var outgoingMsg1 = MarkdownMessage(jiraJqlResponse, incomingMsg).getFormattedMessage()
                  //   sendBack(incomingMsg, outgoingMsg1)
                 }

@@ -1,11 +1,13 @@
 package team.microchad.dto
 
 import kotlinx.serialization.SerialName
-import team.microchad.config.JiraLocalDateTimeDeserializer
+import team.microchad.utils.JiraLocalDateTimeDeserializer
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 
+
+//TODO Refactor!
 enum class WebHookEvent {
     @SerialName("comment_created")
     COMMENT_CREATED,

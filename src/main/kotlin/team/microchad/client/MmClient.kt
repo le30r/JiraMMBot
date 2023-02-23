@@ -10,20 +10,13 @@ import io.ktor.serialization.kotlinx.json.*
 
 import kotlinx.serialization.json.Json
 
-import org.koin.java.KoinJavaComponent.inject
 import team.microchad.config.MattermostConfiguration
 
 import team.microchad.dto.mm.OutgoingMsg
 
 class MmClient {
+    private val configuration = MattermostConfiguration()
 
-    //TODO Delete this and use DI. For example create a MattermostConfiguration class
-    companion object {
-        private const val MM_BASE_WEBHOOK = "tin-workshop.ddns.net:8065/hooks"
-        private const val MM_WEBHOOK_TOKEN = "5mj4ntowb7n3ddkb8hqbuw8sde"
-    }
-
-    val configuration: MattermostConfiguration by inject<MattermostConfiguration>()
     private val client = HttpClient(Java) {
         install(ContentNegotiation) {
             json(Json {
@@ -35,10 +28,10 @@ class MmClient {
     }
 
     suspend fun send(message: OutgoingMsg): HttpResponse = client.request {
-        url{
+        url {
             protocol = URLProtocol.HTTP
-            host = MM_BASE_WEBHOOK
-            appendPathSegments(MM_WEBHOOK_TOKEN)
+            host = configuration.webhookUrl
+            appendPathSegments(configuration.token)
         }
         method = HttpMethod.Post
         headers {

@@ -1,9 +1,5 @@
 package team.microchad.service
 
-import team.microchad.dto.jira.Issue
-import team.microchad.dto.jira.JiraJqlResponse
-import team.microchad.dto.mm.IncomingMsg
-
 fun markdown(init: MarkdownMessage.() -> Unit): String {
     val result = MarkdownMessage()
     result.init()
