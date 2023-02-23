@@ -24,7 +24,7 @@ class MmClient(private val _accessToken: String) {
             bearer {
                 sendWithoutRequest { true }
                 loadTokens {
-                    BearerTokens(_accessToken, "");
+                    BearerTokens(_accessToken, "")
                 }
             }
         }
@@ -33,10 +33,9 @@ class MmClient(private val _accessToken: String) {
                 prettyPrint = true
                 isLenient = true
                 ignoreUnknownKeys = true
+
             })
         }
-
-
     }
 
     suspend fun getUsers(): UserDto {
@@ -46,6 +45,7 @@ class MmClient(private val _accessToken: String) {
                 host = MM_API_BASE_URL
                 appendPathSegments(MM_API_VERSION, MM_USERS, "me")
             }
+
         }.body()
     }
 
