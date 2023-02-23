@@ -13,6 +13,7 @@ import team.microchad.plugins.Secrets
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import team.microchad.dto.jira.JiraJqlResponse
+import team.microchad.utils.toUrl
 
 
 class JiraClient {
@@ -35,14 +36,6 @@ class JiraClient {
                 }
             }
         }
-        install(ContentNegotiation) {
-            json(Json {
-                prettyPrint = true
-                isLenient = true
-                ignoreUnknownKeys = true
-            })
-        }
-
         install(ContentNegotiation) {
             json(Json {
                 prettyPrint = true
@@ -79,7 +72,8 @@ class JiraClient {
     }
 
     private fun jqlQueryFor(username: String, status: String) =
-        String(("assignee=$username&fields=id,key,summary,updated&status=$status").toByteArray(), Charsets.UTF_8)
-
+       String(("assignee=${username}%20and%20status=$status&fields=id,key,summary,updated").toByteArray(), Charsets.UTF_8)
+           .replace(" ","%20")
+           .replace("\"", "%22")
 
 }
