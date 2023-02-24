@@ -16,10 +16,18 @@ import team.microchad.dto.jira.JiraJqlResponse
 import kotlinx.serialization.json.Json
 
 import team.microchad.config.JiraConfiguration
+import team.microchad.dto.jira.Comment
+import team.microchad.dto.jira.Issue
 import team.microchad.exceptions.JiraBadRequestException
 
 
 class JiraClient {
+    companion object {
+        private const val JIRA_API_BASE_URL = "tin-workshop.ddns.net:8080"
+        private const val JIRA_API_PATH = "rest/api/2/search"
+        private const val JIRA_API_COMMENT = "rest/api/2/issue/?/comment" //TODO Implement parameter injection instead of ?
+        private const val JIRA_JQL = "jql="
+    }
 
     private val configuration = JiraConfiguration()
 
@@ -43,7 +51,7 @@ class JiraClient {
     }
 
     //TODO method to just send a jql. Create a jqlFactory
-    suspend fun sendJql(jql: String): JiraJqlResponse {
+    suspend fun getByJql(jql: String): JiraJqlResponse {
         val response: HttpResponse = client.get {
             url {
                 protocol = URLProtocol.HTTP
@@ -58,5 +66,29 @@ class JiraClient {
         else
             throw JiraBadRequestException("Jira return ${response.status}. Check if the request is correct.")
     }
+
+    suspend fun getProjectsByUser(username: String): JiraJqlResponse {
+        return getByJql("assignee=$username")
+    }
+
+    suspend fun commentIssue(issueKey: String, comment: String): Boolean {
+        val response: HttpResponse = client.post {
+            url {
+                protocol = URLProtocol.HTTP
+                host = configuration.baseUrl
+                appendPathSegments(JIRA_API_COMMENT.replace("?", issueKey))//TODO Implement parameter injection instead of ?
+                setBody(Comment(body = comment, visibility = null))
+                trailingQuery = true
+            }
+        }
+        return response.status == HttpStatusCode.OK
+    }
+
+
+
+    private fun jqlQueryFor(username: String, status: String) =
+       String(("assignee=${username}%20and%20status=$status&fields=id,key,summary,updated").toByteArray(), Charsets.UTF_8)
+           .replace(" ","%20")
+           .replace("\"", "%22")
 
 }
