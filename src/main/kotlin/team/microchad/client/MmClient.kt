@@ -9,13 +9,15 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 
 import kotlinx.serialization.json.Json
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 import team.microchad.config.MattermostConfiguration
 
 import team.microchad.dto.mm.OutgoingMsg
 
-class MmClient {
-    private val configuration = MattermostConfiguration()
+class MmClient : KoinComponent {
+    private val configuration: MattermostConfiguration by inject()
 
     private val client = HttpClient(Java) {
         install(ContentNegotiation) {

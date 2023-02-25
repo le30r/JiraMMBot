@@ -14,15 +14,17 @@ import io.ktor.serialization.kotlinx.json.*
 import team.microchad.dto.jira.JiraJqlResponse
 
 import kotlinx.serialization.json.Json
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 import team.microchad.config.JiraConfiguration
 import team.microchad.dto.jira.Comment
 import team.microchad.exceptions.JiraBadRequestException
 
 
-class JiraClient {
+class JiraClient : KoinComponent {
 
-    private val configuration = JiraConfiguration()
+    private val configuration: JiraConfiguration by inject()
 
     private val client = HttpClient(Java) {
         install(Auth) {
