@@ -17,17 +17,10 @@ import kotlinx.serialization.json.Json
 
 import team.microchad.config.JiraConfiguration
 import team.microchad.dto.jira.Comment
-import team.microchad.dto.jira.Issue
 import team.microchad.exceptions.JiraBadRequestException
 
 
 class JiraClient {
-    companion object {
-        private const val JIRA_API_BASE_URL = "tin-workshop.ddns.net:8080"
-        private const val JIRA_API_PATH = "rest/api/2/search"
-        private const val JIRA_API_COMMENT = "rest/api/2/issue/?/comment" //TODO Implement parameter injection instead of ?
-        private const val JIRA_JQL = "jql="
-    }
 
     private val configuration = JiraConfiguration()
 
@@ -76,7 +69,7 @@ class JiraClient {
             url {
                 protocol = URLProtocol.HTTP
                 host = configuration.baseUrl
-                appendPathSegments(JIRA_API_COMMENT.replace("?", issueKey))//TODO Implement parameter injection instead of ?
+                appendPathSegments(configuration.apiComment.replace("?", issueKey))//TODO Implement parameter injection instead of ?
                 setBody(Comment(body = comment, visibility = null))
                 trailingQuery = true
             }
