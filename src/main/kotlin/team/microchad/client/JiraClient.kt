@@ -64,6 +64,7 @@ class JiraClient {
         return getByJql("assignee=$username")
     }
 
+    //TODO use "space" and toUrl instead of unicode symbols
     suspend fun getOutstandingIssuesForUser(username: String): JiraJqlResponse {
         return getByJql("assignee=$username%20and%20status!=%22Done%22")
     }
