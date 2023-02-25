@@ -16,6 +16,7 @@ import team.microchad.dto.jira.JiraJqlResponse
 import kotlinx.serialization.json.Json
 
 import team.microchad.config.JiraConfiguration
+import team.microchad.dto.jira.Comment
 import team.microchad.exceptions.JiraBadRequestException
 
 
@@ -43,7 +44,7 @@ class JiraClient {
     }
 
     //TODO method to just send a jql. Create a jqlFactory
-    suspend fun sendJql(jql: String): JiraJqlResponse {
+    suspend fun getByJql(jql: String): JiraJqlResponse {
         val response: HttpResponse = client.get {
             url {
                 protocol = URLProtocol.HTTP
@@ -58,5 +59,50 @@ class JiraClient {
         else
             throw JiraBadRequestException("Jira return ${response.status}. Check if the request is correct.")
     }
+
+    suspend fun getProjectsByUser(username: String): JiraJqlResponse {
+        return getByJql("assignee=$username")
+    }
+
+    //TODO use "space" and toUrl instead of unicode symbols
+    suspend fun getOutstandingIssuesForUser(username: String): JiraJqlResponse {
+        return getByJql("assignee=$username%20and%20status!=%22Done%22")
+    }
+
+    suspend fun getUserIssuesSortedByStatus(username: String): JiraJqlResponse {
+        return getByJql("assignee=$username%20ORDER%20BY%20status")
+    }
+
+    suspend fun getUserIssuesWithStatus(username: String, status: String): JiraJqlResponse {
+        return getByJql("assignee=$username%20and%20status=%22$status%22")
+    }
+
+    suspend fun getDoneIssuesForDays(days: Int): JiraJqlResponse {
+        return getByJql("status%20changed%20to%20%22Done%22%20AFTER%20-${days}d")
+    }
+
+    suspend fun getUserDoneIssuesForDays(username: String,days: Int): JiraJqlResponse {
+        return getByJql("assignee=$username%20and%20status%20changed%20to%20%22Done%22%20AFTER%20-${days}d")
+    }
+
+    suspend fun commentIssue(issueKey: String, comment: String): Boolean {
+        val response: HttpResponse = client.post {
+            url {
+                protocol = URLProtocol.HTTP
+                host = configuration.baseUrl
+                appendPathSegments(configuration.apiComment.replace("?", issueKey))//TODO Implement parameter injection instead of ?
+                setBody(Comment(body = comment, visibility = null))
+                trailingQuery = true
+            }
+        }
+        return response.status == HttpStatusCode.OK
+    }
+
+
+
+    private fun jqlQueryFor(username: String, status: String) =
+       String(("assignee=${username}%20and%20status=$status&fields=id,key,summary,updated").toByteArray(), Charsets.UTF_8)
+           .replace(" ","%20")
+           .replace("\"", "%22")
 
 }
