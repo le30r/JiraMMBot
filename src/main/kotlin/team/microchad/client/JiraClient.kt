@@ -64,6 +64,26 @@ class JiraClient {
         return getByJql("assignee=$username")
     }
 
+    suspend fun getOutstandingIssuesForUser(username: String): JiraJqlResponse {
+        return getByJql("assignee=$username%20and%20status!=%22Done%22")
+    }
+
+    suspend fun getUserIssuesSortedByStatus(username: String): JiraJqlResponse {
+        return getByJql("assignee=$username%20ORDER%20BY%20status")
+    }
+
+    suspend fun getUserIssuesWithStatus(username: String, status: String): JiraJqlResponse {
+        return getByJql("assignee=$username%20and%20status=%22$status%22")
+    }
+
+    suspend fun getDoneIssuesForDays(days: Int): JiraJqlResponse {
+        return getByJql("status%20changed%20to%20%22Done%22%20AFTER%20-${days}d")
+    }
+
+    suspend fun getUserDoneIssuesForDays(username: String,days: Int): JiraJqlResponse {
+        return getByJql("assignee=$username%20and%20status%20changed%20to%20%22Done%22%20AFTER%20-${days}d")
+    }
+
     suspend fun commentIssue(issueKey: String, comment: String): Boolean {
         val response: HttpResponse = client.post {
             url {
