@@ -9,9 +9,5 @@ class JiraConfiguration {
     val searchJql = "search/jql"
     val issue = "issue"
     val comment = "comment"
-    val botUsername = "mrsaloed"
-    val botPassword = "root"
-//    val botUsername = Secrets.botUsername
-//    val botPassword = Secrets.botPassword
-
-}
+    val botUsername = Secrets.botUsername
+    val botPassword = Secrets.botPassword
