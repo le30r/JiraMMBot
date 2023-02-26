@@ -1,5 +1,7 @@
 package team.microchad.dto.jira
 
-@kotlinx.serialization.Serializable
+import kotlinx.serialization.*
+
+@Serializable
 data class Comment(val body: String, val visibility: Visibility?)
 
