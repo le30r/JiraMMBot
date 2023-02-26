@@ -11,12 +11,12 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 
-import team.microchad.dto.jira.JiraJqlResponse
-
 import kotlinx.serialization.json.Json
+
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+import team.microchad.dto.jira.JiraJqlResponse
 import team.microchad.config.JiraConfiguration
 import team.microchad.dto.jira.Comment
 import team.microchad.exceptions.JiraBadRequestException
@@ -42,7 +42,6 @@ class JiraClient : KoinComponent {
                 ignoreUnknownKeys = true
             })
         }
-
     }
 
     //TODO method to just send a jql. Create a jqlFactory
@@ -60,6 +59,21 @@ class JiraClient : KoinComponent {
             return response.body()
         else
             throw JiraBadRequestException("Jira return ${response.status}. Check if the request is correct.")
+    }
+
+    suspend fun commentIssue(issueKey: String, newComment: String): Boolean {
+        val response: HttpResponse = client.post {
+            url {
+                protocol = URLProtocol.HTTP
+                host = configuration.baseUrl
+                with(configuration){
+                    appendPathSegments(apiPath, issue, issueKey, comment)//TODO Implement parameter injection instead of ?
+                }
+                setBody(Comment(body = newComment, visibility = null))
+                contentType(ContentType.Application.Json)
+            }
+        }
+        return response.status == HttpStatusCode.Created
     }
 
     //TODO use "space" and toUrl instead of unicode symbols
@@ -82,23 +96,6 @@ class JiraClient : KoinComponent {
     suspend fun getUserDoneIssuesForDays(username: String,days: Int): JiraJqlResponse {
         return getByJql("assignee=$username%20and%20status%20changed%20to%20%22Done%22%20AFTER%20-${days}d")
     }
-
-    suspend fun commentIssue(issueKey: String, newComment: String): Boolean {
-        val response: HttpResponse = client.post {
-            url {
-                protocol = URLProtocol.HTTP
-                host = configuration.baseUrl
-                with(configuration){
-                    appendPathSegments(apiPath, issue, issueKey, comment)//TODO Implement parameter injection instead of ?
-                }
-                setBody(Comment(body = newComment, visibility = null))
-                contentType(ContentType.Application.Json)
-            }
-        }
-        return response.status == HttpStatusCode.Created
-    }
-
-
 
     private fun jqlQueryFor(username: String, status: String) =
        String(("assignee=${username}%20and%20status=$status&fields=id,key,summary,updated").toByteArray(), Charsets.UTF_8)

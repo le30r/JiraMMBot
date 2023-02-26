@@ -1,9 +1,10 @@
 package team.microchad.dto.mm
 
+import kotlinx.serialization.*
+
 //TODO Rename this class
-@kotlinx.serialization.Serializable
+@Serializable
 data class OutgoingMsg(
-    val channel: String,
-    val text: String,
-    val username: String
+    val channel_id: String,
+    val message: String
 )
