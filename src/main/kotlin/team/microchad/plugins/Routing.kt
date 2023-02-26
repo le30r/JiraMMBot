@@ -6,7 +6,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import org.koin.ktor.ext.inject
 import team.microchad.client.MmClient
-import team.microchad.controllers.MessageController
+import team.microchad.service.MessageService
 import team.microchad.dto.mm.IncomingMsg
 
 
@@ -26,7 +26,7 @@ fun Application.configureRouting() {
             // else if some problems create msg with problem description
             // send msg using mmClient
 
-            MessageController().chooseCommand(incomingMsg)
+            MessageService().chooseCommand(incomingMsg)
 
         }
     }

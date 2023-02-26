@@ -60,10 +60,6 @@ class JiraClient {
             throw JiraBadRequestException("Jira return ${response.status}. Check if the request is correct.")
     }
 
-    suspend fun getProjectsByUser(username: String): JiraJqlResponse {
-        return getByJql("assignee=$username")
-    }
-
     //TODO use "space" and toUrl instead of unicode symbols
     suspend fun getOutstandingIssuesForUser(username: String): JiraJqlResponse {
         return getByJql("assignee=$username%20and%20status!=%22Done%22")
