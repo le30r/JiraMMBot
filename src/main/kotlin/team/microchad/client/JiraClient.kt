@@ -51,7 +51,7 @@ class JiraClient : KoinComponent {
             url {
                 protocol = URLProtocol.HTTP
                 host = configuration.baseUrl
-                appendPathSegments(configuration.apiPath)
+                appendPathSegments(configuration.apiPath, configuration.searchJql)
                 encodedParameters.append("jql", jql)
                 trailingQuery = true
             }
@@ -60,10 +60,6 @@ class JiraClient : KoinComponent {
             return response.body()
         else
             throw JiraBadRequestException("Jira return ${response.status}. Check if the request is correct.")
-    }
-
-    suspend fun getProjectsByUser(username: String): JiraJqlResponse {
-        return getByJql("assignee=$username")
     }
 
     //TODO use "space" and toUrl instead of unicode symbols
@@ -87,17 +83,19 @@ class JiraClient : KoinComponent {
         return getByJql("assignee=$username%20and%20status%20changed%20to%20%22Done%22%20AFTER%20-${days}d")
     }
 
-    suspend fun commentIssue(issueKey: String, comment: String): Boolean {
+    suspend fun commentIssue(issueKey: String, newComment: String): Boolean {
         val response: HttpResponse = client.post {
             url {
                 protocol = URLProtocol.HTTP
                 host = configuration.baseUrl
-                appendPathSegments(configuration.apiComment.replace("?", issueKey))//TODO Implement parameter injection instead of ?
-                setBody(Comment(body = comment, visibility = null))
-                trailingQuery = true
+                with(configuration){
+                    appendPathSegments(apiPath, issue, issueKey, comment)//TODO Implement parameter injection instead of ?
+                }
+                setBody(Comment(body = newComment, visibility = null))
+                contentType(ContentType.Application.Json)
             }
         }
-        return response.status == HttpStatusCode.OK
+        return response.status == HttpStatusCode.Created
     }
 
 
