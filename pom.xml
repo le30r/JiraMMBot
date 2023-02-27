@@ -106,6 +106,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.atlassian.kotlin.dsl</groupId>
+            <artifactId>jql</artifactId>
+            <version>0.1</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.jetbrains.kotlinx</groupId>
             <artifactId>kotlinx-coroutines-debug</artifactId>
             <version>1.6.4</version>

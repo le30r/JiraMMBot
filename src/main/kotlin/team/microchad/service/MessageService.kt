@@ -1,5 +1,8 @@
 package team.microchad.service
 
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.java.KoinJavaComponent.inject
 import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
 import team.microchad.dto.mm.IncomingMsg
@@ -7,8 +10,9 @@ import team.microchad.dto.mm.OutgoingMsg
 import team.microchad.exceptions.JiraBadRequestException
 
 
-class MessageService {
-
+class MessageService : KoinComponent {
+    private val jiraClient: JiraClient by inject()
+    private val mmClient: MmClient by inject()
     companion object {
         const val BOT_NAME = "Best Bot"
 
@@ -37,7 +41,7 @@ class MessageService {
             COMMAND_HELP -> sendBack(incomingMsg, HELP_MSG)
             COMMAND_JQL -> {
                 try {
-                    var jiraResponse = JiraClient().getByJql(message[POS_PARAMETER_1])
+                    var jiraResponse = jiraClient.getByJql(message[POS_PARAMETER_1])
                     var outgoingMsg = ""//TODO Formatted output
 
                     sendBack(incomingMsg, outgoingMsg)
@@ -46,13 +50,13 @@ class MessageService {
                 }
             }
             COMMAND_COMMENT -> {
-                if (JiraClient().commentIssue(message[POS_PARAMETER_1], message[POS_PARAMETER_2]))
+                if (jiraClient.commentIssue(message[POS_PARAMETER_1], message[POS_PARAMETER_2]))
                     sendBack(incomingMsg, SUCCESSFUL)
                 else sendBack(incomingMsg, BAD_REQUEST)
             }
             COMMAND_ISSUES -> {
                 if (message.size >= 4) {
-                    var jiraJqlResponse = JiraClient().getByJql(message[POS_PARAMETER_1])//TODO Formatted output
+                    var jiraJqlResponse = jiraClient.getByJql(message[POS_PARAMETER_1]) //TODO Formatted output
                     // var outgoingMsg1 = MarkdownMessage(jiraJqlResponse, incomingMsg).getFormattedMessage()
                     //   sendBack(incomingMsg, outgoingMsg1)
                 } else sendBack(incomingMsg, PARAM_COUNT_EXCEPTION)
@@ -62,7 +66,7 @@ class MessageService {
 
     private suspend fun sendBack(incomingMsg: IncomingMsg, text: String) {
 
-        MmClient().send(
+        mmClient.send(
             OutgoingMsg(
                 text = text,
                 channel = incomingMsg.channel_name,

@@ -1,5 +1,6 @@
 package team.microchad.client
 
+import com.atlassian.jira.jql.field.Assignee
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.java.*
@@ -25,7 +26,7 @@ import team.microchad.exceptions.JiraBadRequestException
 class JiraClient : KoinComponent {
 
     private val configuration: JiraConfiguration by inject()
-
+    val jqlQuery = Assignee equalTo "mrsaloed"
     private val client = HttpClient(Java) {
         install(Auth) {
             basic {

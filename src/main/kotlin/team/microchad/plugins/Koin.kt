@@ -7,6 +7,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
+import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
 import team.microchad.config.JiraConfiguration
 import team.microchad.config.MattermostConfiguration
@@ -23,6 +24,7 @@ fun Application.configureDI() {
 val mmBotModule = module {
     factory {
         MmClient()
+        JiraClient()
     }
 
     singleOf(::MattermostConfiguration) {
@@ -32,4 +34,5 @@ val mmBotModule = module {
     singleOf(::JiraConfiguration) {
         createdAtStart()
     }
+
 }
