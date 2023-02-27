@@ -1,9 +1,18 @@
 package team.microchad.dto.jira
 
-import kotlinx.serialization.*
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class Field(
     var summary: String,
-    var updated: String, //TODO( исправить представление даты)
+    var updated: String?, //TODO( исправить представление даты)
+    var description: String?,
+    var project: Project,
+    var issueType: IssueType
 )
+
+@Serializable
+class Project(var key: String, var id: String?)
+
+@Serializable
+class IssueType(var id: String)

@@ -28,7 +28,6 @@ class MessageService {
         const val POS_COMMAND = 1
         const val POS_PARAMETER_1 = 2
         const val POS_PARAMETER_2 = 3
-
     }
 
     suspend fun chooseCommand(incomingMsg: IncomingMsg) {
@@ -64,7 +63,7 @@ class MessageService {
                             for (issue in jiraJqlResponse.issues) {
                                 row {
                                     column { issue.fields.summary }
-                                    column { issue.fields.updated }
+                                    column { issue.fields.updated.orEmpty() }
                                 }
                             }
                         }

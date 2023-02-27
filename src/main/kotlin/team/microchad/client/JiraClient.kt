@@ -97,6 +97,10 @@ class JiraClient : KoinComponent {
         return getByJql("assignee=$username%20and%20status%20changed%20to%20%22Done%22%20AFTER%20-${days}d")
     }
 
+    suspend fun createIssue() {
+
+    }
+
     private fun jqlQueryFor(username: String, status: String) =
        String(("assignee=${username}%20and%20status=$status&fields=id,key,summary,updated").toByteArray(), Charsets.UTF_8)
            .replace(" ","%20")
