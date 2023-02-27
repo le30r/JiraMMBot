@@ -1,6 +1,5 @@
 package team.microchad.client
 
-import com.atlassian.jira.jql.field.Assignee
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.java.*
@@ -100,6 +99,36 @@ class JiraClient : KoinComponent {
             return response.body()
         else
             throw JiraBadRequestException("Jira return ${response.status}. Check if the request is correct.")
+    }
+
+    suspend fun createIssue(issueDto: Issue): Boolean {
+        val response: HttpResponse = client.post {
+            url {
+                protocol = URLProtocol.HTTP
+                host = configuration.baseUrl
+                with(configuration){
+                    appendPathSegments(apiPath, issue)//TODO Implement parameter injection instead of ?
+                }
+                setBody(Issue)
+                contentType(ContentType.Application.Json)
+            }
+        }
+        return response.status == HttpStatusCode.Created
+    }
+
+    suspend fun updateIssue(issueDto: Issue): Boolean {
+        val response: HttpResponse = client.put {
+            url {
+                protocol = URLProtocol.HTTP
+                host = configuration.baseUrl
+                with(configuration){
+                    appendPathSegments(apiPath, issue, issueDto.key)//TODO Implement parameter injection instead of ?
+                }
+                setBody(Issue)
+                contentType(ContentType.Application.Json)
+            }
+        }
+        return response.status == HttpStatusCode.NoContent
     }
 
     suspend fun commentIssue(issueKey: String, newComment: String): Boolean {

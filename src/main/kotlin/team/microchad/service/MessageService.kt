@@ -50,7 +50,7 @@ class MessageService {
             }
             COMMAND_ISSUES -> {
                 if (message.size >= 3) {
-                    val jiraJqlResponse = JiraClient().getUserIssuesSortedByStatus(message[2])//TODO Formatted output
+                    val jiraJqlResponse = JiraClient().getUserIssuesSortedByStatus(message[2])
                     val outgoingMsg = markdown {
                         h1 {
                             "Issues for user ${message[2]}"
