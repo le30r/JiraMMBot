@@ -1,11 +1,12 @@
 package team.microchad.dto.jira
 
 import kotlinx.serialization.json.JsonNames
+import kotlinx.serialization.*
 
-@kotlinx.serialization.Serializable
+@Serializable
 data class JiraJqlResponse(
     var expand: String?,
-    var startAt : Long,
+    var startAt: Long,
     var maxResults: Long,
     var total: Long,
     @JsonNames("issues")

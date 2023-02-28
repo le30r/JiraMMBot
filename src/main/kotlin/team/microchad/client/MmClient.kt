@@ -4,6 +4,8 @@ import com.atlassian.jira.jql.field.Assignee
 import com.atlassian.jira.jql.field.Project
 import io.ktor.client.*
 import io.ktor.client.engine.java.*
+import io.ktor.client.plugins.auth.*
+import io.ktor.client.plugins.auth.providers.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -11,11 +13,12 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 
 import kotlinx.serialization.json.Json
+
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 import team.microchad.config.MattermostConfiguration
-
+import team.microchad.dto.mm.IncomingMsg
 import team.microchad.dto.mm.OutgoingMsg
 
 class MmClient : KoinComponent {
@@ -28,6 +31,14 @@ class MmClient : KoinComponent {
                 isLenient = true
                 ignoreUnknownKeys = true
             })
+        }
+        install(Auth) {
+            bearer {
+                sendWithoutRequest { true }
+                loadTokens {
+                    BearerTokens("sfh8d78d5f83ddiwkce5148g3w", "")
+                }
+            }
         }
     }
 
@@ -43,4 +54,26 @@ class MmClient : KoinComponent {
         }
         setBody(message)
     }
+
+    suspend fun createDirectChat(message: IncomingMsg): HttpResponse = client.request {
+        url {
+            protocol = URLProtocol.HTTP
+            host = configuration.api
+        }
+        contentType(ContentType.Application.Json)
+        method = HttpMethod.Post
+        setBody(listOf(configuration.botId, message.user_id)
+        )
+    }
+
+    suspend fun sendToDirect(message: OutgoingMsg): HttpResponse = client.request {
+        url {
+            protocol = URLProtocol.HTTP
+            host = configuration.posts
+        }
+        contentType(ContentType.Application.Json)
+        method = HttpMethod.Post
+        setBody(message)
+    }
+
 }

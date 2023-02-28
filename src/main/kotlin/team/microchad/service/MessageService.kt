@@ -1,18 +1,15 @@
 package team.microchad.service
 
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
-import org.koin.java.KoinJavaComponent.inject
 import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
 import team.microchad.dto.mm.IncomingMsg
 import team.microchad.dto.mm.OutgoingMsg
 import team.microchad.exceptions.JiraBadRequestException
+import team.microchad.utils.deleteDoubleSpace
 
 
-class MessageService : KoinComponent {
-    private val jiraClient: JiraClient by inject()
-    private val mmClient: MmClient by inject()
+class MessageService {
+
     companion object {
         const val BOT_NAME = "Best Bot"
 
@@ -21,12 +18,11 @@ class MessageService : KoinComponent {
         const val COMMAND_JQL = "!jql"
         const val COMMAND_COMMENT = "!comment"
 
-        const val HELP_MSG = "There are few commands that implemented for this moment:\n" +
-                "1. stats !issues {name of assignee}\n" +
-                "2. stats !jql {JQL query}\n" +
-                "3. stats !comment {Issue key} {Your comment}\n"
+        const val HELP_MSG = "##### There are few commands that implemented for this moment:\n" +
+                "**1. stats !issues {name of assignee}**\n" +
+                "**2. stats !comment {Issue key} {Your comment}**\n"
         const val PARAM_COUNT_EXCEPTION = "Exception: parameter exception"
-        const val BAD_REQUEST = "Exception: bad request"
+        const val BAD_REQUEST = "**Exception: bad request. Use _stats !help_ to check correctness**"
         const val SUCCESSFUL = "Command executed successful"
 
         const val POS_COMMAND = 1
@@ -36,43 +32,61 @@ class MessageService : KoinComponent {
     }
 
     suspend fun chooseCommand(incomingMsg: IncomingMsg) {
-        val message = incomingMsg.text.split(" ")
+        val message = incomingMsg.text.deleteDoubleSpace().split(" ")
         when (message[POS_COMMAND]) {
             COMMAND_HELP -> sendBack(incomingMsg, HELP_MSG)
             COMMAND_JQL -> {
                 try {
-                    var jiraResponse = jiraClient.getByJql(message[POS_PARAMETER_1])
-                    var outgoingMsg = ""//TODO Formatted output
-
+                    val jiraResponse = JiraClient().getByJql(message[POS_PARAMETER_1])
+                    val outgoingMsg = jiraResponse.toString()//TODO Formatted output
                     sendBack(incomingMsg, outgoingMsg)
                 } catch (exception: JiraBadRequestException) {
                     sendBack(incomingMsg, BAD_REQUEST)
                 }
             }
             COMMAND_COMMENT -> {
-                if (jiraClient.commentIssue(message[POS_PARAMETER_1], message[POS_PARAMETER_2]))
+                if (JiraClient().commentIssue(message[POS_PARAMETER_1], message[POS_PARAMETER_2]))
                     sendBack(incomingMsg, SUCCESSFUL)
                 else sendBack(incomingMsg, BAD_REQUEST)
             }
             COMMAND_ISSUES -> {
-                if (message.size >= 4) {
-                    var jiraJqlResponse = jiraClient.getByJql(message[POS_PARAMETER_1]) //TODO Formatted output
-                    // var outgoingMsg1 = MarkdownMessage(jiraJqlResponse, incomingMsg).getFormattedMessage()
-                    //   sendBack(incomingMsg, outgoingMsg1)
+                if (message.size >= 3) {
+                    val jiraJqlResponse = JiraClient().getUserIssuesSortedByStatus(message[2])//TODO Formatted output
+                    val outgoingMsg = markdown {
+                        h1 {
+                            "Issues for user ${message[2]}"
+                        }
+                        table {
+                            headerRow {
+                                column { "Summary" }
+                                column { "Updated" }
+                            }
+                            for (issue in jiraJqlResponse.issues) {
+                                row {
+                                    column { issue.fields.summary }
+                                    column { issue.fields.updated }
+                                }
+                            }
+                        }
+                    }
+                    sendBack(incomingMsg, outgoingMsg)
                 } else sendBack(incomingMsg, PARAM_COUNT_EXCEPTION)
+            }
+            else -> {
+                sendBack(incomingMsg, BAD_REQUEST)
             }
         }
     }
 
     private suspend fun sendBack(incomingMsg: IncomingMsg, text: String) {
 
-        mmClient.send(
-            OutgoingMsg(
-                text = text,
-                channel = incomingMsg.channel_name,
-                username = BOT_NAME
-            )
-        )
+//        MmClient().send(
+//            OutgoingMsg(
+//                text = text,
+//                channel = incomingMsg.channel_name,
+//                username = BOT_NAME
+//            )
+//        )
     }
 
 }
