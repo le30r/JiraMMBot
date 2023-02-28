@@ -23,12 +23,14 @@ fun Application.configureRouting() {
         }
         post("/") {
             val statuses = JiraClient().getStatuses()
+            val users = JiraClient().getUsers()
+
             val incomingMsg = fromParam(call.receiveParameters())
             val response = mikeBot.createDirectChat(incomingMsg)
             println(response)
             val directChannel = response.body<DirectChannel>()
             println(directChannel)
-            val outgoingMsg = OutgoingMsg(directChannel.id, incomingMsg.text)
+            val outgoingMsg = OutgoingMsg(directChannel.id, users[0].name)
             println(
                 mikeBot.sendToDirect(outgoingMsg)
             )
