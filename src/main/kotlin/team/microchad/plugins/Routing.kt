@@ -12,27 +12,31 @@ import team.microchad.dto.mm.DirectChannel
 import team.microchad.dto.mm.OutgoingMsg
 import team.microchad.dto.mm.dialog.Dialog
 import team.microchad.dto.mm.dialog.DialogMessage
+import team.microchad.dto.mm.dialog.elements.DialogElement
 import team.microchad.dto.mm.dialog.elements.TextElement
 import team.microchad.dto.mm.fromParam
 import team.microchad.service.markdown
+import java.util.*
 import java.util.*
 
 
 fun Application.configureRouting() {
     val mikeBot: MmClient by inject()
+    val jiraClient: JiraClient by inject()
     routing {
 
         get("/") {
             call.respondText("Hello, world!")
         }
         post("/") {
-            val statuses = JiraClient().getStatuses()
-            val users = JiraClient().getUsers()
+            val statuses = jiraClient.getStatuses()
+            val users = jiraClient.getUsers()
 
             val incomingMsg = fromParam(call.receiveParameters())
-            val elements = listOf(TextElement("Display Name","name", "text","text",null,null,null,null,null,"placeholder"))
-            val dialog = Dialog(UUID.randomUUID().toString(), "Dialog title", null, elements);
-            val dialogMessage = DialogMessage(incomingMsg.trigger_id, "http://localhost:8080/dialog", dialog);
+            val element = TextElement("Text element", "text")
+
+            val dialog = Dialog(UUID.randomUUID().toString(), "Dialog title", null, listOf(element))
+            val dialogMessage = DialogMessage(incomingMsg.trigger_id, "${Secrets.botHost}/dialog", dialog)
             mikeBot.openDialog(dialogMessage)
 //
 //            val response = mikeBot.createDirectChannel(incomingMsg)
