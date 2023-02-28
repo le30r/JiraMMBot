@@ -32,7 +32,7 @@ fun Application.configureRouting() {
             val incomingMsg = fromParam(call.receiveParameters())
             val elements = listOf(TextElement("Display Name","name", "text","text",null,null,null,null,null,"placeholder"))
             val dialog = Dialog(UUID.randomUUID().toString(), "Dialog title", null, elements);
-            val dialogMessage = DialogMessage(incomingMsg.trigger_id, "http://mike.vpn:8080/dialog", dialog);
+            val dialogMessage = DialogMessage(incomingMsg.trigger_id, "http://localhost:8080/dialog", dialog);
             mikeBot.openDialog(dialogMessage)
 //
 //            val response = mikeBot.createDirectChannel(incomingMsg)

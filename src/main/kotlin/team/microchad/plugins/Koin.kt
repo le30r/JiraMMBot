@@ -2,6 +2,7 @@ package team.microchad.plugins
 
 import io.ktor.server.application.*
 import org.koin.core.module.dsl.createdAtStart
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 
 import org.koin.dsl.module
@@ -16,17 +17,11 @@ fun Application.configureDI() {
     install(Koin) {
         slf4jLogger()
         modules(mmBotModule)
-
     }
 
 }
 
 val mmBotModule = module {
-    factory {
-        MmClient()
-        JiraClient()
-    }
-
     singleOf(::MattermostConfiguration) {
         createdAtStart()
     }
@@ -34,5 +29,6 @@ val mmBotModule = module {
     singleOf(::JiraConfiguration) {
         createdAtStart()
     }
-
+    factoryOf(::MmClient)
+    factoryOf(::JiraClient)
 }
