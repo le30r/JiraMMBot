@@ -18,6 +18,7 @@ import org.koin.core.component.inject
 import team.microchad.config.MattermostConfiguration
 import team.microchad.dto.mm.IncomingMsg
 import team.microchad.dto.mm.OutgoingMsg
+import team.microchad.dto.mm.dialog.DialogMessage
 
 class MmClient : KoinComponent {
     private val configuration: MattermostConfiguration by inject()
@@ -68,6 +69,16 @@ class MmClient : KoinComponent {
         url {
             protocol = URLProtocol.HTTP
             host = configuration.posts
+        }
+        contentType(ContentType.Application.Json)
+        method = HttpMethod.Post
+        setBody(message)
+    }
+
+    suspend fun openDialog(message: DialogMessage):HttpResponse = client.request {
+        url {
+            protocol = URLProtocol.HTTP
+            host = configuration.openDialog
         }
         contentType(ContentType.Application.Json)
         method = HttpMethod.Post
