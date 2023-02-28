@@ -18,6 +18,7 @@ import org.koin.core.component.inject
 import team.microchad.config.MattermostConfiguration
 import team.microchad.dto.mm.IncomingMsg
 import team.microchad.dto.mm.OutgoingMsg
+import team.microchad.dto.mm.dialog.DialogMessage
 
 class MmClient : KoinComponent {
     private val configuration: MattermostConfiguration by inject()
@@ -34,7 +35,7 @@ class MmClient : KoinComponent {
             bearer {
                 sendWithoutRequest { true }
                 loadTokens {
-                    BearerTokens("sfh8d78d5f83ddiwkce5148g3w", "")
+                    BearerTokens(configuration.token, "")
                 }
             }
         }
@@ -53,7 +54,7 @@ class MmClient : KoinComponent {
         setBody(message)
     }
 
-    suspend fun createDirectChat(message: IncomingMsg): HttpResponse = client.request {
+    suspend fun createDirectChannel(message: IncomingMsg): HttpResponse = client.request {
         url {
             protocol = URLProtocol.HTTP
             host = configuration.api
@@ -64,10 +65,20 @@ class MmClient : KoinComponent {
         )
     }
 
-    suspend fun sendToDirect(message: OutgoingMsg): HttpResponse = client.request {
+    suspend fun sendToDirectChannel(message: OutgoingMsg): HttpResponse = client.request {
         url {
             protocol = URLProtocol.HTTP
             host = configuration.posts
+        }
+        contentType(ContentType.Application.Json)
+        method = HttpMethod.Post
+        setBody(message)
+    }
+
+    suspend fun openDialog(message: DialogMessage):HttpResponse = client.request {
+        url {
+            protocol = URLProtocol.HTTP
+            host = configuration.openDialog
         }
         contentType(ContentType.Application.Json)
         method = HttpMethod.Post
