@@ -22,13 +22,13 @@ fun Application.configureRouting() {
         }
         post("/") {
             val incomingMsg = fromParam(call.receiveParameters())
-            val response = mikeBot.createDirectChat(incomingMsg)
+            val response = mikeBot.createDirectChannel(incomingMsg)
             println(response)
             val directChannel = response.body<DirectChannel>()
             println(directChannel)
             val outgoingMsg = OutgoingMsg(directChannel.id, incomingMsg.text)
             println(
-                mikeBot.sendToDirect(outgoingMsg)
+                mikeBot.sendToDirectChannel(outgoingMsg)
             )
             call.respondText(markdown { bold { "[Check response](http://tin-workshop.ddns.net:8065/microchad/messages/@mike-bot)" } })
             //TODO Описание работы

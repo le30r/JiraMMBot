@@ -34,7 +34,7 @@ class MmClient : KoinComponent {
             bearer {
                 sendWithoutRequest { true }
                 loadTokens {
-                    BearerTokens("sfh8d78d5f83ddiwkce5148g3w", "")
+                    BearerTokens(configuration.token, "")
                 }
             }
         }
@@ -53,7 +53,7 @@ class MmClient : KoinComponent {
         setBody(message)
     }
 
-    suspend fun createDirectChat(message: IncomingMsg): HttpResponse = client.request {
+    suspend fun createDirectChannel(message: IncomingMsg): HttpResponse = client.request {
         url {
             protocol = URLProtocol.HTTP
             host = configuration.api
@@ -64,7 +64,7 @@ class MmClient : KoinComponent {
         )
     }
 
-    suspend fun sendToDirect(message: OutgoingMsg): HttpResponse = client.request {
+    suspend fun sendToDirectChannel(message: OutgoingMsg): HttpResponse = client.request {
         url {
             protocol = URLProtocol.HTTP
             host = configuration.posts
