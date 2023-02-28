@@ -6,6 +6,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import org.koin.ktor.ext.inject
+import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
 import team.microchad.dto.mm.DirectChannel
 import team.microchad.dto.mm.OutgoingMsg
@@ -25,6 +26,9 @@ fun Application.configureRouting() {
             call.respondText("Hello, world!")
         }
         post("/") {
+            val statuses = JiraClient().getStatuses()
+            val users = JiraClient().getUsers()
+
             val incomingMsg = fromParam(call.receiveParameters())
             val elements = listOf(TextElement("Display Name","name", "text","text",null,null,null,null,null,"placeholder"))
             val dialog = Dialog(UUID.randomUUID().toString(), "Dialog title", null, elements);

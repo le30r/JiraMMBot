@@ -7,6 +7,7 @@ class JiraConfiguration {
     val baseUrl = "tin-workshop.ddns.net:8080"  //TODO Use localhost:$PORT instead hardcoded URL, maybe separate test and prod parameters
     val apiPath = "rest/api/2"
     val searchJql = "search"
+    val status = "status"
     val issue = "issue"
     val comment = "comment"
     val botUsername = Secrets.botUsername
