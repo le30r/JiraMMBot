@@ -5,6 +5,7 @@ ktor:
   deployment:
     port: 8080
 bot:
+  host: $BOT_HOST
   auth:
     username: $BOT_USERNAME
     password: $BOT_PASSWORD

@@ -1,8 +1,10 @@
 package team.microchad.dto.mm.dialog.elements
 
+import kotlinx.serialization.*
 
-interface DialogElement {
-    val display_name: String
-    val name: String
-    val type: String
-}
+@Serializable
+ open class DialogElement (
+     val display_name: String,
+     val name: String,
+     val type: String
+)
