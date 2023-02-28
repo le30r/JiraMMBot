@@ -30,7 +30,7 @@ fun Application.configureRouting() {
             println(response)
             val directChannel = response.body<DirectChannel>()
             println(directChannel)
-            val outgoingMsg = OutgoingMsg(directChannel.id, users[0].name)
+            val outgoingMsg = OutgoingMsg(directChannel.id, incomingMsg.text)
             println(
                 mikeBot.sendToDirect(outgoingMsg)
             )
