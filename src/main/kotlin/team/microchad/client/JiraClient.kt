@@ -19,6 +19,7 @@ import org.koin.core.component.inject
 import team.microchad.dto.jira.JiraJqlResponse
 import team.microchad.config.JiraConfiguration
 import team.microchad.dto.jira.Comment
+import team.microchad.dto.jira.Status
 import team.microchad.exceptions.JiraBadRequestException
 
 
@@ -53,6 +54,24 @@ class JiraClient : KoinComponent {
                 appendPathSegments(configuration.apiPath, configuration.searchJql)
                 encodedParameters.append("jql", jql)
                 trailingQuery = true
+            }
+        }
+        if (response.status == HttpStatusCode.OK)
+            return response.body()
+        else
+            throw JiraBadRequestException("Jira return ${response.status}. Check if the request is correct.")
+    }
+
+    suspend fun getStatuses(): Array<Status> {
+        val response: HttpResponse = client.get {
+            url {
+                protocol = URLProtocol.HTTP
+                host = configuration.baseUrl
+                appendPathSegments(configuration.apiPath, configuration.status)
+                trailingQuery = true
+            }
+            headers {
+                contentType(ContentType.Application.Json)
             }
         }
         if (response.status == HttpStatusCode.OK)

@@ -6,6 +6,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import org.koin.ktor.ext.inject
+import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
 import team.microchad.dto.mm.DirectChannel
 import team.microchad.dto.mm.OutgoingMsg
@@ -21,6 +22,7 @@ fun Application.configureRouting() {
             call.respondText("Hello, world!")
         }
         post("/") {
+            val statuses = JiraClient().getStatuses()
             val incomingMsg = fromParam(call.receiveParameters())
             val response = mikeBot.createDirectChat(incomingMsg)
             println(response)
