@@ -7,4 +7,5 @@ class MattermostConfiguration {
     val api = "tin-workshop.ddns.net:8065/api/v4/channels/direct"
     val botId = "513n8jxeciramrye4k7ka863qa"
     val posts = "tin-workshop.ddns.net:8065/api/v4/posts"
+    val openDialog = "tin-workshop.ddns.net:8065/api/v4/actions/dialogs/open"
 }
