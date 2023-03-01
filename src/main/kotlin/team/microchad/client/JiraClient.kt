@@ -85,7 +85,7 @@ class JiraClient : KoinComponent {
             url {
                 protocol = URLProtocol.HTTP
                 host = configuration.baseUrl
-                with(configuration){
+                with(configuration) {
                     appendPathSegments(apiPath, issue, issueDto.key)//TODO Implement parameter injection instead of ?
                 }
                 setBody(Issue)
@@ -93,6 +93,8 @@ class JiraClient : KoinComponent {
             }
         }
         return response.status == HttpStatusCode.NoContent
+    }
+
     suspend fun getStatuses(): Array<Status> {
         val response: HttpResponse = client.get {
             url {
@@ -176,3 +178,4 @@ class JiraClient : KoinComponent {
            .replace("\"", "%22")
 
 }
+
