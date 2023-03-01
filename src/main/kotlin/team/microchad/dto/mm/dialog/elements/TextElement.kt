@@ -1,7 +1,5 @@
 package team.microchad.dto.mm.dialog.elements
 
-import kotlinx.serialization.*
-
 
 class TextElement(display_name: String, name: String) : DialogElement(display_name, name, "text") {
     val subtype: String? =

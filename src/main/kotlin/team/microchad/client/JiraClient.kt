@@ -23,7 +23,6 @@ import team.microchad.dto.jira.Comment
 import team.microchad.dto.jira.Status
 import team.microchad.dto.jira.User
 import team.microchad.exceptions.JiraBadRequestException
-import team.microchad.utils.toUrl
 
 
 class JiraClient : KoinComponent {

@@ -1,7 +1,5 @@
 package team.microchad.client
 
-import com.atlassian.jira.jql.field.Assignee
-import com.atlassian.jira.jql.field.Project
 import io.ktor.client.*
 import io.ktor.client.engine.java.*
 import io.ktor.client.plugins.auth.*
