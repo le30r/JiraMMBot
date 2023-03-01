@@ -1,8 +1,6 @@
 package team.microchad.dto.mm.dialog.elements
 
-
-
-class TextareaElement(display_name: String, name: String) : DialogElement(display_name, name, "textarea"){
+class TextareaElement(display_name: String, name: String) : DialogElement(display_name, name, "textarea") {
     val subtype: String? =
         null//	(Optional) One of text, email, number, password (as of v5.14), tel, or url. Default is text. Use this to set which keypad is presented to users on mobile when entering the field.
     val min_length: Int? = null//	(Optional) Minimum input length allowed for an element. Default is 0.

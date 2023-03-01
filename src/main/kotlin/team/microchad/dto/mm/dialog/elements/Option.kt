@@ -1,4 +1,5 @@
 package team.microchad.dto.mm.dialog.elements
+
 import kotlinx.serialization.*
 
 @Serializable

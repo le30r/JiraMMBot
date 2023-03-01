@@ -1,5 +1,4 @@
 package team.microchad
 
 
-class ApplicationTest {
-}
+class ApplicationTest

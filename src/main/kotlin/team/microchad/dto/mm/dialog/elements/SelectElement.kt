@@ -1,6 +1,5 @@
 package team.microchad.dto.mm.dialog.elements
 
-
 class SelectElement(display_name: String, name: String) : DialogElement(display_name, name, "select") {
     val data_source: String? =
         null //	(Optional) One of users, or channels. If none specified, assumes a manual list of options is provided by the integration.
