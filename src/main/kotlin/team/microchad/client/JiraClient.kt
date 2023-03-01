@@ -17,7 +17,10 @@ import kotlinx.serialization.json.Json
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+import team.microchad.dto.jira.JiraJqlResponse
 import team.microchad.config.JiraConfiguration
+import team.microchad.dto.jira.Comment
+import team.microchad.dto.jira.Issue
 import team.microchad.dto.jira.*
 import team.microchad.exceptions.JiraBadRequestException
 import team.microchad.utils.toUrl
@@ -62,6 +65,36 @@ class JiraClient : KoinComponent {
             throw JiraBadRequestException("Jira return ${response.status}. Check if the request is correct.")
     }
 
+    suspend fun createIssue(issueDto: Issue): Boolean {
+        val response: HttpResponse = client.post {
+            url {
+                protocol = URLProtocol.HTTP
+                host = configuration.baseUrl
+                with(configuration){
+                    appendPathSegments(apiPath, issue)//TODO Implement parameter injection instead of ?
+                }
+                setBody(Issue)
+                contentType(ContentType.Application.Json)
+            }
+        }
+        return response.status == HttpStatusCode.Created
+    }
+
+    suspend fun updateIssue(issueDto: Issue): Boolean {
+        val response: HttpResponse = client.put {
+            url {
+                protocol = URLProtocol.HTTP
+                host = configuration.baseUrl
+                with(configuration){
+                    appendPathSegments(apiPath, issue, issueDto.key)//TODO Implement parameter injection instead of ?
+                }
+                setBody(Issue)
+                contentType(ContentType.Application.Json)
+            }
+        }
+        return response.status == HttpStatusCode.NoContent
+    }
+
     suspend fun getStatuses(): Array<Status> {
         val response: HttpResponse = client.get {
             url {
@@ -99,36 +132,6 @@ class JiraClient : KoinComponent {
             throw JiraBadRequestException("Jira return ${response.status}. Check if the request is correct.")
     }
 
-    suspend fun createIssue(issueDto: Issue): Boolean {
-        val response: HttpResponse = client.post {
-            url {
-                protocol = URLProtocol.HTTP
-                host = configuration.baseUrl
-                with(configuration){
-                    appendPathSegments(apiPath, issue)//TODO Implement parameter injection instead of ?
-                }
-                setBody(Issue)
-                contentType(ContentType.Application.Json)
-            }
-        }
-        return response.status == HttpStatusCode.Created
-    }
-
-    suspend fun updateIssue(issueDto: Issue): Boolean {
-        val response: HttpResponse = client.put {
-            url {
-                protocol = URLProtocol.HTTP
-                host = configuration.baseUrl
-                with(configuration){
-                    appendPathSegments(apiPath, issue, issueDto.key)//TODO Implement parameter injection instead of ?
-                }
-                setBody(Issue)
-                contentType(ContentType.Application.Json)
-            }
-        }
-        return response.status == HttpStatusCode.NoContent
-    }
-
     suspend fun commentIssue(issueKey: String, newComment: String): Boolean {
         val response: HttpResponse = client.post {
             url {
@@ -163,10 +166,6 @@ class JiraClient : KoinComponent {
 
     suspend fun getUserDoneIssuesForDays(username: String,days: Int): JiraJqlResponse {
         return getByJql("assignee=$username%20and%20status%20changed%20to%20%22Done%22%20AFTER%20-${days}d")
-    }
-
-    suspend fun createIssue() {
-
     }
 
     private fun jqlQueryFor(username: String, status: String) =
