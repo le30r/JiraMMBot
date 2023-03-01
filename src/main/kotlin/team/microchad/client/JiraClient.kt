@@ -1,5 +1,6 @@
 package team.microchad.client
 
+import com.atlassian.jira.jql.field.Assignee
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.java.*
@@ -16,11 +17,8 @@ import kotlinx.serialization.json.Json
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-import team.microchad.dto.jira.JiraJqlResponse
 import team.microchad.config.JiraConfiguration
-import team.microchad.dto.jira.Comment
-import team.microchad.dto.jira.Status
-import team.microchad.dto.jira.User
+import team.microchad.dto.jira.*
 import team.microchad.exceptions.JiraBadRequestException
 import team.microchad.utils.toUrl
 
