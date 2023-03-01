@@ -1,5 +1,6 @@
 package team.microchad.client
 
+import com.atlassian.jira.jql.field.Assignee
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.java.*
@@ -20,13 +21,15 @@ import team.microchad.dto.jira.JiraJqlResponse
 import team.microchad.config.JiraConfiguration
 import team.microchad.dto.jira.Comment
 import team.microchad.dto.jira.Issue
+import team.microchad.dto.jira.Status
+import team.microchad.dto.jira.User
 import team.microchad.exceptions.JiraBadRequestException
 
 
 class JiraClient : KoinComponent {
 
     private val configuration: JiraConfiguration by inject()
-
+    val jqlQuery = Assignee equalTo "mrsaloed"
     private val client = HttpClient(Java) {
         install(Auth) {
             basic {
@@ -90,6 +93,41 @@ class JiraClient : KoinComponent {
             }
         }
         return response.status == HttpStatusCode.NoContent
+    suspend fun getStatuses(): Array<Status> {
+        val response: HttpResponse = client.get {
+            url {
+                protocol = URLProtocol.HTTP
+                host = configuration.baseUrl
+                appendPathSegments(configuration.apiPath, configuration.status)
+                trailingQuery = true
+            }
+            headers {
+                contentType(ContentType.Application.Json)
+            }
+        }
+        if (response.status == HttpStatusCode.OK)
+            return response.body()
+        else
+            throw JiraBadRequestException("Jira return ${response.status}. Check if the request is correct.")
+    }
+
+    suspend fun getUsers(): Array<User> {
+        val response: HttpResponse = client.get {
+            url {
+                protocol = URLProtocol.HTTP
+                host = configuration.baseUrl
+                appendPathSegments(configuration.apiPath, "user/search")
+                encodedParameters.append("username", ".")
+                trailingQuery = true
+            }
+            headers {
+                contentType(ContentType.Application.Json)
+            }
+        }
+        if (response.status == HttpStatusCode.OK)
+            return response.body()
+        else
+            throw JiraBadRequestException("Jira return ${response.status}. Check if the request is correct.")
     }
 
     suspend fun commentIssue(issueKey: String, newComment: String): Boolean {

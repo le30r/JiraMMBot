@@ -1,9 +1,7 @@
 package team.microchad.service
 
 import team.microchad.client.JiraClient
-import team.microchad.client.MmClient
 import team.microchad.dto.mm.IncomingMsg
-import team.microchad.dto.mm.OutgoingMsg
 import team.microchad.exceptions.JiraBadRequestException
 import team.microchad.utils.deleteDoubleSpace
 
