@@ -20,7 +20,7 @@ import org.koin.core.component.inject
 import team.microchad.dto.jira.JiraJqlResponse
 import team.microchad.config.JiraConfiguration
 import team.microchad.dto.jira.Comment
-import team.microchad.dto.jira.Issue
+
 import team.microchad.dto.jira.*
 import team.microchad.exceptions.JiraBadRequestException
 import team.microchad.utils.toUrl
@@ -85,7 +85,7 @@ class JiraClient : KoinComponent {
             url {
                 protocol = URLProtocol.HTTP
                 host = configuration.baseUrl
-                with(configuration){
+                with(configuration) {
                     appendPathSegments(apiPath, issue, issueDto.key)//TODO Implement parameter injection instead of ?
                 }
                 setBody(Issue)
@@ -174,3 +174,4 @@ class JiraClient : KoinComponent {
            .replace("\"", "%22")
 
 }
+

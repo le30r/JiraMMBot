@@ -17,8 +17,7 @@ data class IncomingMsg(
     val trigger_id: String,
     val user_id: String,
     val user_name: String
-) {
-}
+)
 
 fun fromParam(params: Parameters): IncomingMsg {
     return IncomingMsg(

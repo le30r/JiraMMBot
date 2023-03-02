@@ -6,7 +6,7 @@ fun markdown(init: MarkdownMessage.() -> Unit): String {
     return result.result
 }
 
-class MarkdownMessage() {
+class MarkdownMessage {
     var result: String = ""
 
     fun italics(innerText: () -> String) {
@@ -47,7 +47,7 @@ class MarkdownMessage() {
         result += table.result
     }
 
-    class Table() {
+    class Table {
         var result = ""
 
         fun row(init: Row.() -> Unit) {

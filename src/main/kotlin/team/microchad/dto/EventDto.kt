@@ -27,9 +27,9 @@ enum class WebHookEvent {
     companion object {
         fun issueEvents(): Array<WebHookEvent> {
             return arrayOf(
-                WebHookEvent.JIRA_ISSUE_UPDATED,
-                WebHookEvent.JIRA_ISSUE_CREATED,
-                WebHookEvent.JIRA_ISSUE_DELETED
+                JIRA_ISSUE_UPDATED,
+                JIRA_ISSUE_CREATED,
+                JIRA_ISSUE_DELETED
             )
         }
     }
