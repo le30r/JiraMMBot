@@ -4,37 +4,30 @@ import team.microchad.utils.toUrl
 
 
 fun getOutstandingIssuesForUser(username: String): String {
-    val jqlQuery: String = "assignee=$username and status!=\"Done\""
-    return jqlQuery.toUrl()
+    return "assignee=$username and status!=\"Done\"".toUrl()
 }
 
 fun getUserIssuesSortedByStatus(username: String): String {
-    val jqlQuery: String = "assignee=$username ORDER BY status"
-    return jqlQuery.toUrl()
+    return "assignee=$username ORDER BY status".toUrl()
 }
 
 fun getUserIssuesWithStatus(username: String, status: String): String {
-    val jqlQuery: String = "assignee=$username and status=\"$status\""
-    return jqlQuery.toUrl()
+    return "assignee=$username and status=\"$status\"".toUrl()
 }
 
 fun getIssuesWithStatus(status: String): String {
-    val jqlQuery: String = "status=\"$status\""
-    return jqlQuery.toUrl()
+    return "status=\"$status\"".toUrl()
 }
 
 fun getIssuesWithChangedStatus(status: String): String {
-    val jqlQuery: String = "status changed to \"$status\""
-    return jqlQuery.toUrl()
+    return "status changed to \"$status\"".toUrl()
 }
 
 fun getIssuesWithChangedStatusForDays(status: String, days: Int): String {
-    val jqlQuery: String = "status changed to \"$status\" AFTER -${days}d"
-    return jqlQuery.toUrl()
+    return "status changed to \"$status\" AFTER -${days}d".toUrl()
 }
 
 fun getMyIssuesWithChangedStatusForDays(username: String, status: String, days: Int): String {
-    val jqlQuery: String = "assignee=$username and status changed to \"$status\" AFTER -${days}d"
-    return jqlQuery.toUrl()
+    return "assignee=$username and status changed to \"$status\" AFTER -${days}d".toUrl()
 }
 
