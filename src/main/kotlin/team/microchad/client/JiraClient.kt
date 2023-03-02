@@ -11,19 +11,12 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
-
 import kotlinx.serialization.json.Json
-
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-
-import team.microchad.dto.jira.JiraJqlResponse
 import team.microchad.config.JiraConfiguration
-import team.microchad.dto.jira.Comment
-
 import team.microchad.dto.jira.*
 import team.microchad.exceptions.JiraBadRequestException
-import team.microchad.utils.toUrl
 
 
 class JiraClient : KoinComponent {
