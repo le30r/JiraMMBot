@@ -18,10 +18,6 @@ import team.microchad.config.JiraConfiguration
 import team.microchad.dto.jira.*
 import team.microchad.exceptions.JiraBadRequestException
 
-import com.atlassian.jira.jql.*
-import com.atlassian.jira.jql.field.ProjectType
-import team.microchad.utils.toUrl
-
 
 class JiraClient : KoinComponent {
 
