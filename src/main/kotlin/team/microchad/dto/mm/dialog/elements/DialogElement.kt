@@ -1,6 +1,10 @@
 package team.microchad.dto.mm.dialog.elements
 
-import kotlinx.serialization.*
+import kotlinx.serialization.Serializable
+
+/**
+ * Interface basically
+ */
 
 @Serializable
 open class DialogElement(

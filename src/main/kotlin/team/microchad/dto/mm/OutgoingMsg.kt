@@ -1,6 +1,6 @@
 package team.microchad.dto.mm
 
-import kotlinx.serialization.*
+import kotlinx.serialization.Serializable
 
 //TODO Rename this class
 @Serializable

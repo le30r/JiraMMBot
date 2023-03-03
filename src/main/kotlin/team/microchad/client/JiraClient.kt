@@ -11,18 +11,11 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
-
 import kotlinx.serialization.json.Json
-
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-
-import team.microchad.dto.jira.JiraJqlResponse
 import team.microchad.config.JiraConfiguration
-import team.microchad.dto.jira.Comment
-import team.microchad.dto.jira.Issue
-import team.microchad.dto.jira.Status
-import team.microchad.dto.jira.User
+import team.microchad.dto.jira.*
 import team.microchad.exceptions.JiraBadRequestException
 
 
@@ -145,31 +138,6 @@ class JiraClient : KoinComponent {
             }
         }
         return response.status == HttpStatusCode.Created
-    }
-
-    //TODO use "space" and toUrl instead of unicode symbols
-    suspend fun getOutstandingIssuesForUser(username: String): JiraJqlResponse {
-        return getByJql("assignee=$username%20and%20status!=%22Done%22")
-    }
-
-    suspend fun getUserIssuesSortedByStatus(username: String): JiraJqlResponse {
-        return getByJql("assignee=$username%20ORDER%20BY%20status")
-    }
-
-    suspend fun getUserIssuesWithStatus(username: String, status: String): JiraJqlResponse {
-        return getByJql("assignee=$username%20and%20status=%22$status%22")
-    }
-
-    suspend fun getDoneIssuesForDays(days: Int): JiraJqlResponse {
-        return getByJql("status%20changed%20to%20%22Done%22%20AFTER%20-${days}d")
-    }
-
-    suspend fun getUserDoneIssuesForDays(username: String,days: Int): JiraJqlResponse {
-        return getByJql("assignee=$username%20and%20status%20changed%20to%20%22Done%22%20AFTER%20-${days}d")
-    }
-
-    suspend fun createIssue() {
-
     }
 
     private fun jqlQueryFor(username: String, status: String) =

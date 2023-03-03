@@ -1,22 +1,17 @@
 package team.microchad.plugins
 
-import io.ktor.client.call.*
-import io.ktor.server.routing.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
-import team.microchad.dto.mm.DirectChannel
-import team.microchad.dto.mm.OutgoingMsg
 import team.microchad.dto.mm.dialog.Dialog
 import team.microchad.dto.mm.dialog.DialogMessage
-import team.microchad.dto.mm.dialog.elements.DialogElement
 import team.microchad.dto.mm.dialog.elements.TextElement
 import team.microchad.dto.mm.fromParam
 import team.microchad.service.markdown
-import java.util.*
 import java.util.*
 
 

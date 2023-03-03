@@ -4,7 +4,6 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import team.microchad.model.entities.Issue
 import team.microchad.model.entities.Issues
-import team.microchad.model.entities.Projects
 
 class IssueRepository : CrudRepository<Issue> {
     override suspend fun findAll(): List<Issue> = dbQuery {
