@@ -28,7 +28,7 @@ data class IncomingMsg(
     val userName: String
 )
 
-fun fromParam(params: Parameters): IncomingMsg {
+fun createMessageFromParam(params: Parameters): IncomingMsg {
     return IncomingMsg(
         params["channel_id"] ?: "",
         params["channel_name"] ?: "",

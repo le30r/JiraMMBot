@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("select")
 data class SelectElement(
+    @SerialName("display_name")
     override val displayName: String,
     override val name: String,
     @SerialName("data_source")

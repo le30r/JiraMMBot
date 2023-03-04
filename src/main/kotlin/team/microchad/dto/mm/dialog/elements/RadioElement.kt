@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("radio")
 data class RadioElement(
+    @SerialName("display_name")
     override val displayName: String,
     override val name: String,
     val options: List<Option>? = null,//	(Optional) An array of options for the radio element.

@@ -12,7 +12,7 @@ import kotlinx.serialization.Serializable
 //TODO: Pass all child classes fields to constructors according to Kotlin features (Default Constructor Options)
 @Serializable
 sealed class DialogElement {
-    @SerialName("displayName")
+    @SerialName("display_name")
     abstract val displayName: String
     abstract val name: String
 }

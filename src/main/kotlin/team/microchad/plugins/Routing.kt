@@ -9,21 +9,16 @@ import org.koin.ktor.ext.inject
 
 import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
-import team.microchad.dto.mm.dialog.Dialog
-import team.microchad.dto.mm.dialog.DialogMessage
 import team.microchad.dto.mm.dialog.Response
-import team.microchad.dto.mm.dialog.elements.Option
-import team.microchad.dto.mm.dialog.elements.SelectElement
 import team.microchad.dto.mm.dialog.submissions.SelectionSubmission
-import team.microchad.dto.mm.fromParam
+import team.microchad.dto.mm.createMessageFromParam
 import team.microchad.service.UserService
+import team.microchad.service.createRegisterJiraDialog
 import team.microchad.service.markdown
-
-import java.util.*
 
 
 fun Application.configureRouting() {
-    val mikeBot: MmClient by inject()
+    val mmClient: MmClient by inject()
     val jiraClient: JiraClient by inject()
     val userService: UserService by inject()
     routing {
@@ -35,21 +30,18 @@ fun Application.configureRouting() {
         post("/") {
             //TODO: Change endpoint after testing, move code into another class or fun
             val statuses = jiraClient.getStatuses()
+
+        }
+
+        post("/dialog") {
+            println(call.receiveText())
+        }
+
+        post("/register_dialog") {
+            val incomingMsg = createMessageFromParam(call.receiveParameters())
             val users = jiraClient.getUsers()
-            val incomingMsg = fromParam(call.receiveParameters())
-            val options = users.map { Option(it.name, it.key) }
-            val selectElement = SelectElement("Select your Jira user", "selection", options = options)
-
-            val dialog = Dialog(
-                UUID.randomUUID().toString(),
-                "Select Jira User",
-                null,
-                listOf(selectElement),
-                notifyOnCancel = true
-            )
-
-            val dialogMessage = DialogMessage(incomingMsg.triggerId, "${Secrets.botHost}/register_user", dialog)
-            mikeBot.openDialog(dialogMessage)
+            val dialog = createRegisterJiraDialog(incomingMsg.triggerId, users)
+            mmClient.openDialog(dialog)
             call.respondText(
                 markdown {
                     bold {
@@ -59,16 +51,13 @@ fun Application.configureRouting() {
             )
         }
 
-        post("/dialog") {
-            println(call.receiveText())
-        }
-
         post("/register_user") {
+            //todo: implement adding into DB
             //println(call.receiveText())
             val result = call.receive<Response<SelectionSubmission>>()
             if (!result.cancelled) {
                 with(result) {
-                    userService.registerUser(userId, submission!!.selection)
+                    userService.registerUser(userId, submission!!.jiraUser)
                 }
             }
         }

@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("bool")
 data class CheckboxElement(
+    @SerialName("display_name")
     override val displayName: String,
     override val name: String,
     var optional: Boolean? = null, //   (Optional) Set to true if this form element is not required. Default is false.

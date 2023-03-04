@@ -11,7 +11,7 @@ data class Dialog(
     val callbackId: String,
     val title: String,
     @SerialName("icon_url")
-    val iconUrl: String?,
+    val iconUrl: String? = null,
     @Contextual
     val elements: List<DialogElement>,
     @SerialName("notify_on_cancel")
