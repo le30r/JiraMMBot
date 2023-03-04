@@ -10,6 +10,7 @@ class JiraConfiguration {
     val status = "status"
     val issue = "issue"
     val comment = "comment"
+    val project = "project"
     val botUsername = Secrets.botUsername
     val botPassword = Secrets.botPassword
 }

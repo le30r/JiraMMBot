@@ -12,7 +12,4 @@ data class Field(
 )
 
 @Serializable
-class Project(var key: String, var id: String?)
-
-@Serializable
 class IssueType(var id: String)
