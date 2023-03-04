@@ -6,9 +6,9 @@ import kotlinx.serialization.Serializable
 data class Project(
     var expand: String?,
     var self: String?,
-    var id: String?,
+    var id: String,
     var key: String,
-    var name: String?,
+    var name: String,
     var projectTypeKey: String?,
     var archived: Boolean?
 )

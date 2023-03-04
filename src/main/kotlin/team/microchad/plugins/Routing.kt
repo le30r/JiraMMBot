@@ -12,9 +12,8 @@ import team.microchad.client.MmClient
 import team.microchad.dto.mm.dialog.Response
 import team.microchad.dto.mm.dialog.submissions.SelectionSubmission
 import team.microchad.dto.mm.createMessageFromParam
-import team.microchad.service.UserService
-import team.microchad.service.createRegisterJiraDialog
-import team.microchad.service.markdown
+import team.microchad.dto.mm.dialog.submissions.StatisticsSubmission
+import team.microchad.service.*
 
 
 fun Application.configureRouting() {
@@ -30,7 +29,26 @@ fun Application.configureRouting() {
         post("/") {
             //TODO: Change endpoint after testing, move code into another class or fun
             val statuses = jiraClient.getStatuses()
+            val projects = jiraClient.getProjects()
+            val incomingMsg = createMessageFromParam(call.receiveParameters())
+            val dialog = createStatisticsDialog(incomingMsg.triggerId, statuses, projects)
+            mmClient.openDialog(dialog)
+            call.respondText(
+                markdown {
+                    bold {
+                        "Continue in dialog window"
+                    }
+                }
+            )
+        }
 
+        post("/statistics") {
+            val incoming = call.receive<Response<StatisticsSubmission>>()
+            val status = incoming.submission?.selectStatus
+            val project = incoming.submission?.selectProject
+            println("${status}, $project")
+            val responseJira = jiraClient.getByJqlStr(getIssuesWithStatus(status ?: ""))
+            println(responseJira)
         }
 
         post("/dialog") {
