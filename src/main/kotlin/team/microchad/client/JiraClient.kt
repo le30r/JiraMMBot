@@ -1,6 +1,5 @@
 package team.microchad.client
 
-import com.atlassian.jira.jql.field.Assignee
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.java.*
@@ -11,9 +10,12 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
+
 import kotlinx.serialization.json.Json
+
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+
 import team.microchad.config.JiraConfiguration
 import team.microchad.dto.jira.*
 import team.microchad.exceptions.JiraBadRequestException
@@ -22,7 +24,6 @@ import team.microchad.exceptions.JiraBadRequestException
 class JiraClient : KoinComponent {
 
     private val configuration: JiraConfiguration by inject()
-    val jqlQuery = Assignee equalTo "mrsaloed"
     private val client = HttpClient(Java) {
         install(Auth) {
             basic {
@@ -63,7 +64,7 @@ class JiraClient : KoinComponent {
             url {
                 protocol = URLProtocol.HTTP
                 host = configuration.baseUrl
-                with(configuration){
+                with(configuration) {
                     appendPathSegments(apiPath, issue)//TODO Implement parameter injection instead of ?
                 }
                 setBody(Issue)
@@ -130,8 +131,13 @@ class JiraClient : KoinComponent {
             url {
                 protocol = URLProtocol.HTTP
                 host = configuration.baseUrl
-                with(configuration){
-                    appendPathSegments(apiPath, issue, issueKey, comment)//TODO Implement parameter injection instead of ?
+                with(configuration) {
+                    appendPathSegments(
+                        apiPath,
+                        issue,
+                        issueKey,
+                        comment
+                    )//TODO Implement parameter injection instead of ?
                 }
                 setBody(Comment(body = newComment, visibility = null))
                 contentType(ContentType.Application.Json)
@@ -139,11 +145,6 @@ class JiraClient : KoinComponent {
         }
         return response.status == HttpStatusCode.Created
     }
-
-    private fun jqlQueryFor(username: String, status: String) =
-       String(("assignee=${username}%20and%20status=$status&fields=id,key,summary,updated").toByteArray(), Charsets.UTF_8)
-           .replace(" ","%20")
-           .replace("\"", "%22")
 
 }
 

@@ -1,25 +1,34 @@
 package team.microchad.dto.mm
 
 import io.ktor.http.*
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 //TODO Rename this class
 @Serializable
 data class IncomingMsg(
-    val channel_id: String,
-    val channel_name: String,
+    @SerialName("channel_id")
+    val channelId: String,
+    @SerialName("channel_name")
+    val channelName: String,
     val command: String,
-    val response_url: String,
-    val team_domain: String,
-    val team_id: String,
+    @SerialName("response_url")
+    val responseUrl: String,
+    @SerialName("team_domain")
+    val teamDomain: String,
+    @SerialName("team_id")
+    val teamId: String,
     val text: String,
     val token: String,
-    val trigger_id: String,
-    val user_id: String,
-    val user_name: String
+    @SerialName("trigger_id")
+    val triggerId: String,
+    @SerialName("user_id")
+    val userId: String,
+    @SerialName("user_name")
+    val userName: String
 )
 
-fun fromParam(params: Parameters): IncomingMsg {
+fun createMessageFromParam(params: Parameters): IncomingMsg {
     return IncomingMsg(
         params["channel_id"] ?: "",
         params["channel_name"] ?: "",

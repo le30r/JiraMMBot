@@ -16,8 +16,3 @@ fun Application.module() {
     configureSerialization()
     configDatabase()
 }
-
-
-
-
-
