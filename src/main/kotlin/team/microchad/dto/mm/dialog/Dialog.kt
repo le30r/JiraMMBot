@@ -7,9 +7,11 @@ import team.microchad.dto.mm.dialog.elements.DialogElement
 
 @Serializable
 data class Dialog(
-    val callback_id: String,
+    @SerialName("callback_id")
+    val callbackId: String,
     val title: String,
-    val icon_url: String?,
+    @SerialName("icon_url")
+    val iconUrl: String?,
     @Contextual
     val elements: List<DialogElement>,
     @SerialName("notify_on_cancel")

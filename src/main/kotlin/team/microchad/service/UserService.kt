@@ -2,6 +2,7 @@ package team.microchad.service
 
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+
 import team.microchad.model.repositories.UserRepository
 
 class UserService : KoinComponent {

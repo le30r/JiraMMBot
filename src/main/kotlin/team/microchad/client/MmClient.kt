@@ -21,6 +21,7 @@ import team.microchad.dto.mm.OutgoingMsg
 import team.microchad.dto.mm.dialog.DialogMessage
 
 class MmClient : KoinComponent {
+
     private val configuration: MattermostConfiguration by inject()
 
     private val client = HttpClient(Java) {
@@ -61,7 +62,7 @@ class MmClient : KoinComponent {
         }
         contentType(ContentType.Application.Json)
         method = HttpMethod.Post
-        setBody(listOf(configuration.botId, message.user_id)
+        setBody(listOf(configuration.botId, message.userId)
         )
     }
 

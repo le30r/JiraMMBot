@@ -83,13 +83,14 @@ class MarkdownMessage {
                     for (i in 0 until columns.count()) {
                         res.append(
                             when (i) {
-                            columns.count()-1 -> {
-                                "|:----:|"
+                                columns.count() - 1 -> {
+                                    "|:----:|"
+                                }
+                                else -> {
+                                    "|:----:"
+                                }
                             }
-                            else -> {
-                                "|:----:"
-                            }
-                        })
+                        )
                     }
                     return res.toString()
                 }

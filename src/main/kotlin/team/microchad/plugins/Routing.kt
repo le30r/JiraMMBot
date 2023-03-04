@@ -4,7 +4,9 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+
 import org.koin.ktor.ext.inject
+
 import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
 import team.microchad.dto.mm.dialog.Dialog
@@ -16,6 +18,7 @@ import team.microchad.dto.mm.dialog.submissions.SelectionSubmission
 import team.microchad.dto.mm.fromParam
 import team.microchad.service.UserService
 import team.microchad.service.markdown
+
 import java.util.*
 
 
@@ -35,20 +38,21 @@ fun Application.configureRouting() {
             val users = jiraClient.getUsers()
             val incomingMsg = fromParam(call.receiveParameters())
             val options = users.map { Option(it.name, it.key) }
-            val selectElement = SelectElement("Select your Jira user", "selection")
-            selectElement.options = options
+            val selectElement = SelectElement("Select your Jira user", "selection", options = options)
 
-            val dialog = Dialog(UUID.randomUUID().toString(),
+            val dialog = Dialog(
+                UUID.randomUUID().toString(),
                 "Select Jira User",
                 null,
                 listOf(selectElement),
-                notifyOnCancel = true)
+                notifyOnCancel = true
+            )
 
-            val dialogMessage = DialogMessage(incomingMsg.trigger_id, "${Secrets.botHost}/register_user", dialog)
+            val dialogMessage = DialogMessage(incomingMsg.triggerId, "${Secrets.botHost}/register_user", dialog)
             mikeBot.openDialog(dialogMessage)
             call.respondText(
                 markdown {
-                   bold {
+                    bold {
                         "Continue registration in dialog window"
                     }
                 }
@@ -63,7 +67,7 @@ fun Application.configureRouting() {
             //println(call.receiveText())
             val result = call.receive<Response<SelectionSubmission>>()
             if (!result.cancelled) {
-                with (result) {
+                with(result) {
                     userService.registerUser(userId, submission!!.selection)
                 }
             }
