@@ -2,7 +2,6 @@ package team.microchad.model.repositories
 
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import team.microchad.model.entities.Issues
 import team.microchad.model.entities.User
 import team.microchad.model.entities.Users
 

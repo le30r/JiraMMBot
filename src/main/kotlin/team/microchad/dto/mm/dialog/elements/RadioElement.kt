@@ -1,7 +1,9 @@
 package team.microchad.dto.mm.dialog.elements
 
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+
 @Serializable
 @SerialName("radio")
 class RadioElement(override val display_name: String, override val name: String) : DialogElement() {

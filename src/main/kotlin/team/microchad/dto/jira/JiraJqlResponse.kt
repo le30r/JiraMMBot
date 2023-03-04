@@ -1,7 +1,7 @@
 package team.microchad.dto.jira
 
-import kotlinx.serialization.json.JsonNames
 import kotlinx.serialization.*
+import kotlinx.serialization.json.JsonNames
 
 @Serializable
 data class JiraJqlResponse(

@@ -4,6 +4,7 @@
       <env name="BOT_USERNAME" value="le30r" />
       <env name="BOT_PASSWORD" value="wannacry1337" />
       <env name="MM_TOKEN" value="ns9hipwfn7d17dgaxt7ao4ouor" />
+      <env name="BOT_HOST" value="http://artem.vpn:8080" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="team.microchad.ApplicationKt" />
     <module name="jira-mm-bot" />
