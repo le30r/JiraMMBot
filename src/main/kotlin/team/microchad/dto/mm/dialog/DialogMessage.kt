@@ -1,6 +1,6 @@
 package team.microchad.dto.mm.dialog
 
-import kotlinx.serialization.*
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class DialogMessage(

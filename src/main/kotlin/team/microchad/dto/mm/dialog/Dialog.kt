@@ -2,7 +2,8 @@ package team.microchad.dto.mm.dialog
 
 import team.microchad.dto.mm.dialog.elements.DialogElement
 
-import kotlinx.serialization.*
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class Dialog(
