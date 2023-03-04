@@ -1,6 +1,12 @@
 package team.microchad.dto.mm.dialog.elements
 
-class SelectElement(display_name: String, name: String) : DialogElement(display_name, name, "select") {
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+@SerialName("select")
+class SelectElement(override val display_name: String,
+                    override val name: String) : DialogElement() {
     var data_source: String? =
         null //	(Optional) One of users, or channels. If none specified, assumes a manual list of options is provided by the integration.
     var optional: Boolean? = null //	(Optional) Set to true if this form element is not required. Default is false.

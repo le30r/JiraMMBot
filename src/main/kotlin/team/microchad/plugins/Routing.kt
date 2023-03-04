@@ -28,7 +28,7 @@ fun Application.configureRouting() {
             val statuses = jiraClient.getStatuses()
             val users = jiraClient.getUsers()
             val incomingMsg = fromParam(call.receiveParameters())
-            val options = listOf(Option("option1", "option1"), Option("option1", "option"))
+            val options = users.map { Option(it.name, it.key) }
             val selectElement = SelectElement("jira user", "jira_user_select")
             selectElement.options = options
 
