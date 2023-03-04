@@ -1,6 +1,7 @@
 package team.microchad.client
 
 import io.ktor.client.*
+import io.ktor.client.call.*
 import io.ktor.client.engine.java.*
 import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
@@ -16,6 +17,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 import team.microchad.config.MattermostConfiguration
+import team.microchad.dto.mm.DirectChannel
 import team.microchad.dto.mm.IncomingMsg
 import team.microchad.dto.mm.OutgoingMsg
 import team.microchad.dto.mm.dialog.DialogMessage
@@ -55,16 +57,16 @@ class MmClient : KoinComponent {
         setBody(message)
     }
 
-    suspend fun createDirectChannel(message: IncomingMsg): HttpResponse = client.request {
+    suspend fun createDirectChannel(userId: String): String = client.request {
         url {
             protocol = URLProtocol.HTTP
             host = configuration.api
         }
         contentType(ContentType.Application.Json)
         method = HttpMethod.Post
-        setBody(listOf(configuration.botId, message.userId)
+        setBody(listOf(configuration.botId, userId)
         )
-    }
+    }.body<DirectChannel>().id
 
     suspend fun sendToDirectChannel(message: OutgoingMsg): HttpResponse = client.request {
         url {

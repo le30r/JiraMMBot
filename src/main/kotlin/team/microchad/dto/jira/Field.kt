@@ -5,10 +5,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Field(
     var summary: String,
-    var updated: String?, //TODO( исправить представление даты)
-    var description: String?,
+    var updated: String? = null,  //TODO( исправить представление даты)
+    var description: String? = null,
     var project: Project,
-    var issueType: IssueType
+    var issueType: IssueType? = null
 )
 
 @Serializable
