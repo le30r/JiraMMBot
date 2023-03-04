@@ -106,6 +106,24 @@ class JiraClient : KoinComponent {
             throw JiraBadRequestException("Jira return ${response.status}. Check if the request is correct.")
     }
 
+    suspend fun getProjects(): Array<Project> {
+        val response: HttpResponse = client.get {
+            url {
+                protocol = URLProtocol.HTTP
+                host = configuration.baseUrl
+                appendPathSegments(configuration.apiPath, configuration.project)
+                trailingQuery = true
+            }
+            headers {
+                contentType(ContentType.Application.Json)
+            }
+        }
+        if (response.status == HttpStatusCode.OK)
+            return response.body()
+        else
+            throw JiraBadRequestException("Jira return ${response.status}. Check if the request is correct.")
+    }
+
     suspend fun getUsers(): Array<User> {
         val response: HttpResponse = client.get {
             url {
