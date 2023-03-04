@@ -12,11 +12,14 @@ import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
 import team.microchad.config.JiraConfiguration
 import team.microchad.config.MattermostConfiguration
+import team.microchad.model.repositories.UserRepository
+import team.microchad.service.UserService
 
 fun Application.configureDI() {
     install(Koin) {
         slf4jLogger()
         modules(mmBotModule)
+
     }
 
 }
@@ -29,6 +32,11 @@ val mmBotModule = module {
     singleOf(::JiraConfiguration) {
         createdAtStart()
     }
+
+    singleOf(::UserRepository) {
+        createdAtStart()
+    }
+    factoryOf(::UserService)
     factoryOf(::MmClient)
     factoryOf(::JiraClient)
 }

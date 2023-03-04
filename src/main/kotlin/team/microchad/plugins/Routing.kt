@@ -9,49 +9,64 @@ import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
 import team.microchad.dto.mm.dialog.Dialog
 import team.microchad.dto.mm.dialog.DialogMessage
+import team.microchad.dto.mm.dialog.Response
 import team.microchad.dto.mm.dialog.elements.Option
 import team.microchad.dto.mm.dialog.elements.SelectElement
+import team.microchad.dto.mm.dialog.submissions.SelectionSubmission
 import team.microchad.dto.mm.fromParam
+import team.microchad.service.UserService
+import team.microchad.service.markdown
 import java.util.*
 
 
 fun Application.configureRouting() {
     val mikeBot: MmClient by inject()
     val jiraClient: JiraClient by inject()
+    val userService: UserService by inject()
     routing {
 
         get("/") {
             call.respondText("Hello, world!")
         }
+
         post("/") {
+            //TODO: Change endpoint after testing, move code into another class or fun
             val statuses = jiraClient.getStatuses()
             val users = jiraClient.getUsers()
             val incomingMsg = fromParam(call.receiveParameters())
             val options = users.map { Option(it.name, it.key) }
-            val selectElement = SelectElement("jira user", "jira_user_select")
+            val selectElement = SelectElement("Select your Jira user", "selection")
             selectElement.options = options
 
-            val dialog = Dialog(UUID.randomUUID().toString(), "Select Jira User", null, listOf(selectElement))
-            val dialogMessage = DialogMessage(incomingMsg.trigger_id, "${Secrets.botHost}/dialog", dialog)
-            mikeBot.openDialog(dialogMessage)
-            call.respond(dialogMessage)
-//            call.respondText(
-//                markdown {
-//                    bold {
-//                        "[Check response](http://10.8.0.1:8065/microchad/messages/@mike-bot)"
-//                    }
-//                }
-//            )
-            //TODO Описание работы
-            // parse jql from incoming msg using msgController. return Jql
-            // send jql using JiraClient. If all OK get JiraResponse and create outgoing msg
-            // else if some problems create msg with problem description
-            // send msg using mmClient
+            val dialog = Dialog(UUID.randomUUID().toString(),
+                "Select Jira User",
+                null,
+                listOf(selectElement),
+                notifyOnCancel = true)
 
+            val dialogMessage = DialogMessage(incomingMsg.trigger_id, "${Secrets.botHost}/register_user", dialog)
+            mikeBot.openDialog(dialogMessage)
+            call.respondText(
+                markdown {
+                   bold {
+                        "Continue registration in dialog window"
+                    }
+                }
+            )
         }
 
         post("/dialog") {
             println(call.receiveText())
+        }
+
+        post("/register_user") {
+            //println(call.receiveText())
+            val result = call.receive<Response<SelectionSubmission>>()
+            if (!result.cancelled) {
+                with (result) {
+                    userService.registerUser(userId, submission!!.selection)
+                }
+            }
         }
 
     }
