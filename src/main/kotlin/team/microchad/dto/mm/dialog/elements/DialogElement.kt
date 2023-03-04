@@ -7,8 +7,7 @@ import kotlinx.serialization.Serializable
  */
 
 @Serializable
-open class DialogElement(
-    val display_name: String,
-    val name: String,
-    val type: String
-)
+sealed class DialogElement {
+    abstract val display_name: String
+    abstract val name: String
+}
