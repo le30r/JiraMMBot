@@ -5,10 +5,10 @@ import kotlinx.serialization.json.JsonNames
 
 @Serializable
 data class JiraJqlResponse(
-    var expand: String?,
+    var expand: String? = null,
     var startAt: Long,
     var maxResults: Long,
     var total: Long,
     @JsonNames("issues")
-    var issues: Array<Issue>
+    var issues: Array<Issue>? = null
 )

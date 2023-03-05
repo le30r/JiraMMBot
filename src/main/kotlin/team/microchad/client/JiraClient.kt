@@ -58,6 +58,21 @@ class JiraClient : KoinComponent {
         else
             throw JiraBadRequestException("Jira return ${response.status}. Check if the request is correct.")
     }
+    suspend fun getByJqlStr(jql: String): String {
+        val response: HttpResponse = client.get {
+            url {
+                protocol = URLProtocol.HTTP
+                host = configuration.baseUrl
+                appendPathSegments(configuration.apiPath, configuration.searchJql)
+                encodedParameters.append("jql", jql)
+                trailingQuery = true
+            }
+        }
+        if (response.status == HttpStatusCode.OK)
+            return response.bodyAsText()
+        else
+            throw JiraBadRequestException("Jira return ${response.status}. Check if the request is correct.")
+    }
 
     suspend fun createIssue(issueDto: Issue): Boolean {
         val response: HttpResponse = client.post {
