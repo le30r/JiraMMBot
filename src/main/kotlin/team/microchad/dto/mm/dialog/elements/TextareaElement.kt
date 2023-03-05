@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-@SerialName("text")
+@SerialName("textarea")
 data class TextareaElement(
     @SerialName("display_name")
     override val displayName: String,
