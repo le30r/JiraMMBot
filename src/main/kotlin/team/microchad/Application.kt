@@ -2,6 +2,7 @@ package team.microchad
 
 import io.ktor.server.application.*
 import io.ktor.server.config.*
+import team.microchad.model.db.dbInit
 import team.microchad.plugins.*
 
 fun main(args: Array<String>): Unit =
@@ -15,4 +16,5 @@ fun Application.module() {
     configureRouting()
     configureSerialization()
     configDatabase()
+    dbInit()
 }

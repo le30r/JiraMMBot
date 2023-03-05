@@ -1,5 +1,6 @@
 package team.microchad.client
 
+import com.atlassian.jira.jql.field.Assignee
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.java.*
@@ -79,8 +80,8 @@ class JiraClient : KoinComponent {
             url {
                 protocol = URLProtocol.HTTP
                 host = configuration.baseUrl
-                with(configuration) {
-                    appendPathSegments(apiPath, issue)//TODO Implement parameter injection instead of ?
+                with(configuration){
+                    appendPathSegments(apiPath, issue)
                 }
                 setBody(Issue)
                 contentType(ContentType.Application.Json)
@@ -95,7 +96,7 @@ class JiraClient : KoinComponent {
                 protocol = URLProtocol.HTTP
                 host = configuration.baseUrl
                 with(configuration) {
-                    appendPathSegments(apiPath, issue, issueDto.key)//TODO Implement parameter injection instead of ?
+                    appendPathSegments(apiPath, issue, issueDto.key)
                 }
                 setBody(Issue)
                 contentType(ContentType.Application.Json)
