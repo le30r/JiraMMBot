@@ -179,6 +179,13 @@
             <version>0.2.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>it.justwrote</groupId>
+            <artifactId>kjob-kron</artifactId>
+            <version>0.2.0</version>
+        </dependency>
+
+
 
     </dependencies>
     <build>

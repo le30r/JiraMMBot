@@ -57,6 +57,8 @@ class MmClient : KoinComponent {
         setBody(message)
     }
 
+
+
     suspend fun createDirectChannel(userId: String): String = client.request {
         url {
             protocol = URLProtocol.HTTP
