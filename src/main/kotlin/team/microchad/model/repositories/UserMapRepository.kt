@@ -5,13 +5,17 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import team.microchad.model.entities.UserMap
 import team.microchad.model.entities.UsersMap
 
-class UserRepository : CrudRepository<UserMap> {
+class UserMapRepository : CrudRepository<UserMap> {
     override suspend fun findAll(): List<UserMap> = dbQuery {
         UsersMap.selectAll().map(::mapRowToIssue)
     }
 
     override suspend fun findById(id: Long): UserMap? = dbQuery {
         UsersMap.select(UsersMap.id eq id).map(::mapRowToIssue).firstOrNull()
+    }
+
+    suspend fun  findByMmUsername(mmUsername: String): UserMap? = dbQuery {
+        UsersMap.select(UsersMap.mmUsername eq mmUsername).map(::mapRowToIssue).firstOrNull()
     }
 
     override suspend fun delete(id: Long): Boolean = dbQuery {
