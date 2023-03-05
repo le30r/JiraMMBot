@@ -8,20 +8,35 @@ import team.microchad.dto.mm.dialog.DialogMessage
 import team.microchad.dto.mm.dialog.elements.CheckboxElement
 import team.microchad.dto.mm.dialog.elements.Option
 import team.microchad.dto.mm.dialog.elements.SelectElement
+import team.microchad.dto.mm.dialog.elements.TextElement
 import team.microchad.plugins.Secrets
+
 import java.util.UUID
 
 
 fun createRegisterJiraDialog(triggerId: String, users: Array<User>) = DialogMessage(
-    triggerId,
-    "${Secrets.botHost}/register_user",
-    getRegisterDialog(users)
+    triggerId = triggerId,
+    url =  "${Secrets.botHost}/register_user",
+    dialog =  getRegisterDialog(users)
 )
 
 fun createStatisticsDialog(triggerId: String, statuses: Array<Status>, projects: Array<Project>) = DialogMessage(
-    triggerId,
-    "${Secrets.botHost}/statistics",
-    getStatsDialog(statuses, projects)
+    triggerId =  triggerId,
+    url = "${Secrets.botHost}/statistics",
+    dialog =  getStatsDialog(statuses, projects)
+)
+
+fun createSchedulerDialog(triggerId: String,statuses: Array<Status>) = DialogMessage(
+    triggerId = triggerId,
+    url = "${Secrets.botHost}/scheduler",
+    dialog = getSchedulerDialog(statuses)
+)
+
+
+private fun getSchedulerDialog(statuses: Array<Status>) = Dialog(
+    callbackId = UUID.randomUUID().toString(),
+    title = "Scheduler settings",
+    elements = listOf(statusSelect(statuses), dayOfTheWeekSelect(), hourText(), minutesText())
 )
 
 private fun getRegisterDialog(users: Array<User>) = Dialog(
@@ -75,4 +90,40 @@ private fun userSelect() = SelectElement(
     dataSource = "users",
     optional = true,
     helpText = "Select a user here to search for them"
+)
+
+private fun dayOfTheWeekSelect() = SelectElement(
+    displayName = "Day of week",
+    name = "dayOfWeek",
+    options = listOf(
+        Option("Monday", "2"),
+        Option("Tuesday", "3"),
+        Option("Wednesday", "4"),
+        Option("Thursday", "5"),
+        Option("Friday", "6"),
+        Option("Saturday", "7"),
+        Option("Sunday", "1")),
+    helpText = "Select day of week",
+    placeholder = "Day of week"
+)
+
+private fun hourText() = TextElement(
+    displayName = "Hour",
+    name = "hour",
+    helpText = "Enter hour",
+    subtype = "number",
+    placeholder = "Hour",
+    maxLength = 2,
+    minLength = 2
+)
+
+private fun minutesText() = TextElement(
+    displayName = "Minutes",
+    name = "minutes",
+    helpText = "Enter minutes. Empty if 00",
+    subtype = "number",
+    placeholder = "Minutes",
+    maxLength = 2,
+    minLength = 2,
+    optional = true
 )
