@@ -42,15 +42,20 @@ fun Application.configureRouting() {
 
         post("/statistics") {
             val incoming = call.receive<Response<StatisticsSubmission>>()
-
             val status = incoming.submission?.selectStatus
             val project = incoming.submission?.selectProject
-
-            val responseJira = jiraClient.getByJql(
+            val userCheckbox = incoming.submission?.userCheckbox
+            val userSelect = incoming.submission?.userSelect
+            //todo get user from DB
+            val jqlRequest = if (userCheckbox == "true") {
+                getUserIssuesWithStatus(userSelect ?: "", status ?: "", project ?: "")
+            } else {
                 getIssuesWithChangedStatusByProject(status ?: "", project ?: "")
-            )
+            }
             val channelId = mmClient.createDirectChannel(incoming.userId)
-            mmClient.sendToDirectChannel(getOutgoingMessageForIssues(channelId, responseJira.issues))
+            val responseJira = jiraClient.getByJql(jqlRequest)
+            val outgoingMessage = getOutgoingMessageForIssues(channelId, responseJira.issues)
+            mmClient.sendToDirectChannel(outgoingMessage)
         }
 
         post("/dialog") {
