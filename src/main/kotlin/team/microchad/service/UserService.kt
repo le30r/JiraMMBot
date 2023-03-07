@@ -2,14 +2,19 @@ package team.microchad.service
 
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import team.microchad.model.entities.UserMap
 
-import team.microchad.model.repositories.UserRepository
+import team.microchad.model.repositories.UserMapRepository
 
 class UserService : KoinComponent {
-    private val repository: UserRepository by inject()
+    private val repository: UserMapRepository by inject()
 
     //TODO: Implement user registration into database
-    fun registerUser(userId: String, jiraUserId: String) {
-        println("User $userId is registered with $jiraUserId")
+    suspend fun registerUser(userId: String, jiraUserId: String) {
+        UserMapRepository().create(UserMap(id = null, mmUsername = userId, jiraUsername = jiraUserId))
+    }
+
+    suspend fun getJiraUsername(mmUsername: String): String {
+        return UserMapRepository().findByMmUsername(mmUsername)?.jiraUsername.orEmpty()
     }
 }

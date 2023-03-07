@@ -2,6 +2,7 @@ package team.microchad
 
 import io.ktor.server.application.*
 import io.ktor.server.config.*
+import team.microchad.model.db.dbInit
 import team.microchad.plugins.*
 import team.microchad.service.scheduler.MessageJob
 import team.microchad.service.scheduler.configureScheduler
@@ -19,6 +20,7 @@ fun Application.module() {
     configureRouting()
     configureSerialization()
     configDatabase()
+    dbInit()
     configureScheduler()
 }
 
