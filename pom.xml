@@ -26,6 +26,11 @@
             <name>jcenter</name>
             <url>https://jcenter.bintray.com</url>
         </repository>
+        <repository>
+            <id>sonartype</id>
+            <name>sonar</name>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
     </repositories>
     <dependencies>
 
@@ -169,20 +174,20 @@
             <version>3.3.1</version>
         </dependency>
         <dependency>
-            <groupId>it.justwrote</groupId>
+            <groupId>org.drewcarlson</groupId>
             <artifactId>kjob-core</artifactId>
-            <version>0.2.0</version>
+            <version>0.6.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>it.justwrote</groupId>
-            <artifactId>kjob-inmem</artifactId>
-            <version>0.2.0</version>
+            <groupId>org.drewcarlson</groupId>
+            <artifactId>kjob-jdbi</artifactId>
+            <version>0.6.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>it.justwrote</groupId>
+            <groupId>org.drewcarlson</groupId>
             <artifactId>kjob-kron</artifactId>
-            <version>0.2.0</version>
+            <version>0.6.0-SNAPSHOT</version>
         </dependency>
 
 
