@@ -7,15 +7,15 @@ import team.microchad.model.entities.UsersMap
 
 class UserMapRepository : CrudRepository<UserMap> {
     override suspend fun findAll(): List<UserMap> = dbQuery {
-        UsersMap.selectAll().map(::mapRowToIssue)
+        UsersMap.selectAll().map(::mapRowToUserMap)
     }
 
     override suspend fun findById(id: Long): UserMap? = dbQuery {
-        UsersMap.select(UsersMap.id eq id).map(::mapRowToIssue).firstOrNull()
+        UsersMap.select(UsersMap.id eq id).map(::mapRowToUserMap).firstOrNull()
     }
 
     suspend fun  findByMmUsername(mmUsername: String): UserMap? = dbQuery {
-        UsersMap.select(UsersMap.mmUsername eq mmUsername).map(::mapRowToIssue).firstOrNull()
+        UsersMap.select(UsersMap.mmUsername eq mmUsername).map(::mapRowToUserMap).firstOrNull()
     }
 
     override suspend fun delete(id: Long): Boolean = dbQuery {
@@ -34,10 +34,10 @@ class UserMapRepository : CrudRepository<UserMap> {
             it[mmUsername] = entity.mmUsername
             it[jiraUsername] = entity.jiraUsername
         }
-        statement.resultedValues?.firstOrNull()?.let(::mapRowToIssue)
+        statement.resultedValues?.firstOrNull()?.let(::mapRowToUserMap)
     }
 
-    private fun mapRowToIssue(row: ResultRow) = UserMap(
+    private fun mapRowToUserMap(row: ResultRow) = UserMap(
         id = row[UsersMap.id],
         mmUsername = row[UsersMap.mmUsername],
         jiraUsername = row[UsersMap.jiraUsername]

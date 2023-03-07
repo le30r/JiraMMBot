@@ -14,5 +14,5 @@ object UsersMap : Table("user_map") {
     val jiraUsername = varchar("jira_username", 256)
     val mmUsername = varchar("mm_username", 256).uniqueIndex()
 
-    override val primaryKey = PrimaryKey(id, jiraUsername, name = "pk_user_map")
+    override val primaryKey = PrimaryKey(id, name = "pk_user_map")
 }
