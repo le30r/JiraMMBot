@@ -6,6 +6,7 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
+import team.microchad.model.entities.ProjectsMap
 import team.microchad.model.entities.UsersMap
 
 object DatabaseFactory {
@@ -23,5 +24,6 @@ fun Application.dbInit() {
     )
     transaction(database) {
         SchemaUtils.create(UsersMap)
+        SchemaUtils.create(ProjectsMap)
     }
 }
