@@ -20,7 +20,7 @@ fun Application.dbInit() {
         "jdbc:postgresql://localhost:5432/mmbot",
         "org.postgresql.Driver",
         "postgres",
-        "0000"
+        "postgres"
     )
     transaction(database) {
         SchemaUtils.create(UsersMap)

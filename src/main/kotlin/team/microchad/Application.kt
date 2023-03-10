@@ -19,8 +19,10 @@ fun Application.module() {
     configureDI()
     configureRouting()
     configureSerialization()
+    //TODO: select one of this
     configDatabase()
     dbInit()
+    //-----
     configureScheduler()
 }
 

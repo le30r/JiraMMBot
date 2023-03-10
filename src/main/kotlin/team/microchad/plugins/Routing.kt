@@ -73,9 +73,10 @@ fun Application.configureRouting() {
             val project = incoming.submission?.selectProject
             val userCheckbox = incoming.submission?.userCheckbox
             val userSelect = incoming.submission?.userSelect
-            //todo get user from DB
+
             val jqlRequest = if (userCheckbox == "true") {
-                getUserIssuesWithStatus(userSelect ?: "", status ?: "", project ?: "")
+                val jiraUser = userService.getJiraUsername(userSelect!!)
+                getUserIssuesWithStatus(jiraUser, status ?: "", project ?: "")
             } else {
                 getIssuesWithChangedStatusByProject(status ?: "", project ?: "")
             }
