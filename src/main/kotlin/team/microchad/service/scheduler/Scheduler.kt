@@ -22,6 +22,7 @@ val scheduler = kjob(JdbiKJob) {
 fun scheduleMessageSending(name: String ,cronExpression: String, jql: String) {
     scheduler(Kron).kron(MessageJob(name, cronExpression, jql)) {
         executionType = JobExecutionType.BLOCKING
+
         maxRetries = 3
         execute {
             it.sendMessageWithResultOfJql()

@@ -54,7 +54,7 @@ private fun getStatsDialog(statuses: Array<Status>, projects: Array<Project>) = 
 private fun setSelectJiraUser(users: Array<User>) = SelectElement(
     displayName = "Jira user",
     name = "jiraUser",
-    options = users.map { Option(it.name, it.key) },
+    options = users.map { Option(it.name, it.name) },
     placeholder = "Choose Jira user",
     helpText = "Choose your nickname in Jira"
 )
