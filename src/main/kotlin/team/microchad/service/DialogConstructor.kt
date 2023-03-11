@@ -36,6 +36,18 @@ fun createChooseProjectDialog(triggerId: String, projects: Array<Project>) = Dia
     dialog = getChooseProjectDialog(projects)
 )
 
+fun createRegisterProjectDialog(triggerId: String, projects: Array<Project>) = DialogMessage (
+    triggerId = triggerId,
+    url = "${Secrets.botHost}/register-project",
+    dialog = getRegisterProjectDialog(projects)
+)
+
+private fun getRegisterProjectDialog(projects: Array<Project>) = Dialog(
+    callbackId = UUID.randomUUID().toString(),
+    title = "Register your channel with project",
+    elements = listOf(projectSelect(projects))
+)
+
 private fun getChooseProjectDialog(projects: Array<Project>) = Dialog(
     callbackId = UUID.randomUUID().toString(),
     title = "Comment your issue!",
