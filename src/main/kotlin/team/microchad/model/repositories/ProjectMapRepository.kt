@@ -35,7 +35,10 @@ class ProjectMapRepository : CrudRepository<ProjectMap, String> {
 
     private fun mapRowToProjectMap(row: ResultRow) = ProjectMap(
         project = row[ProjectsMap.project],
-        chat = row[ProjectsMap.chat]
+        chat = row[ProjectsMap.chat],
+        monday = row[ProjectsMap.monday],
+        friday = row[ProjectsMap.friday],
+        everyday = row[ProjectsMap.everyday]
     )
 
 }
