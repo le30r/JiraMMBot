@@ -94,5 +94,12 @@ fun Application.configureRouting() {
             call.respond(actionResponse)
         }
 
+        post("commentIssue_dialog") {
+            val result = call.receive<IncomingMsg>()
+            val projects = jiraClient.getProjects()
+            //TODO GET ISSUES
+//            val test = createCommentIssueDialog(result.triggerId, projects, )
+        }
+
     }
 }

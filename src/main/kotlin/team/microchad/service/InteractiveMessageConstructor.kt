@@ -31,5 +31,9 @@ private fun createActionsForJiraBot(): Array<Action> = arrayOf(
         "scheduler", "Scheduler settings", Integration(
             "${Secrets.botHost}/scheduler_dialog"
         )
+    ), Action(
+        "commentIssue", "Comment issue", Integration(
+            "${Secrets.botHost}/commentIssue_dialog"
+        )
     )
 )
