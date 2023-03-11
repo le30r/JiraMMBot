@@ -10,6 +10,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
+import team.microchad.model.entities.ProjectMap
 import team.microchad.model.repositories.ProjectMapRepository
 import team.microchad.plugins.Secrets
 import team.microchad.service.getIssuesByStatusExprAndProject
@@ -23,8 +24,8 @@ val scheduler = kjob(JdbiKJob) {
     extension(KronModule)
 }.start()
 
-fun scheduleMessageSending(name: String ,cronExpression: String, statusExpression: String) {
-    scheduler(Kron).kron(MessageJob(name, cronExpression, statusExpression)) {
+fun scheduleMessageSending(name: String, schedulerSlot: SchedulerSlot, statusExpression: String) {
+    scheduler(Kron).kron(MessageJob(name, schedulerSlot, statusExpression)) {
         executionType = JobExecutionType.BLOCKING
 
         maxRetries = 3
@@ -34,14 +35,31 @@ fun scheduleMessageSending(name: String ,cronExpression: String, statusExpressio
     }
 }
 
-class MessageJob(name: String, cron: String, private val statusExpression: String) : KronJob(name, cron), KoinComponent {
+class MessageJob(name: String, private val schedulerSlot: SchedulerSlot, private val statusExpression: String) :
+    KronJob(name, schedulerSlot.cronExpression), KoinComponent {
     private val jiraClient: JiraClient by inject()
     private val mmClient: MmClient by inject()
     private val repository: ProjectMapRepository by inject()
-    //TODO: implement channel selection
-    suspend fun sendMessageWithResultOfJql() {
+    suspend fun sendMessageWithResultOfJql() =
+        sendMessage(when (schedulerSlot) {
+            (SchedulerSlot.MONDAY) -> {
+                repository.findAll().filter { it.monday }
+            }
+            (SchedulerSlot.FRIDAY
+                    ) -> {
+                repository.findAll().filter { it.monday }
+            }
+            (SchedulerSlot.DAILY) -> {
+                repository.findAll().filter { it.everyday }
+            }
+            else -> {
+                emptyList()
+            }
+        })
 
-        for (project in repository.findAll()) {
+
+    private suspend fun sendMessage(projects: List<ProjectMap>) {
+        for (project in projects) {
             val jql = getIssuesByStatusExprAndProject(statusExpression, project.project)
             val result = jiraClient.getByJql(jql)
 
@@ -49,8 +67,8 @@ class MessageJob(name: String, cron: String, private val statusExpression: Strin
             val serverResponse = mmClient.sendToDirectChannel(msg)
             println(serverResponse)
         }
-
-
     }
+
 }
+
 
