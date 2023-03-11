@@ -18,6 +18,7 @@ import team.microchad.model.repositories.ProjectMapRepository
 import team.microchad.service.UserService
 import team.microchad.controllers.StatisticsController
 import team.microchad.controllers.RegistrationController
+import team.microchad.controllers.SchedulerController
 
 fun Application.configureDI() {
     install(Koin) {
@@ -49,5 +50,6 @@ val mmBotModule = module {
     factoryOf(::JiraClient)
     factoryOf(::RegistrationController)
     factoryOf(::StatisticsController)
+    factoryOf(::SchedulerController)
 
 }
