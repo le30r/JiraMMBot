@@ -4,13 +4,13 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class User(
-    var self: String?,
+    var self: String? = null,
     var key: String,
     var name: String,
-    var emailAddress: String?,
-    var displayName: String?,
-    var active: Boolean?,
-    var deleted: Boolean?,
-    var timeZone: String?,
-    var locale:String?
+    var emailAddress: String? = null,
+    var displayName: String? = null,
+    var active: Boolean? = null,
+    var deleted: Boolean? = null,
+    var timeZone: String? = null,
+    var locale:String? = null
 )
