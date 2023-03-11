@@ -6,7 +6,7 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 interface CrudRepository<T, E> {
     suspend fun findAll(): List<T>
     suspend fun findById(primaryKey: E): T?
-    suspend fun create(entity: T): T?
+    suspend fun create(entity: T): Boolean
     suspend fun update(primaryKey: E, entity: T): Boolean
     suspend fun delete(primaryKey: E): Boolean
 

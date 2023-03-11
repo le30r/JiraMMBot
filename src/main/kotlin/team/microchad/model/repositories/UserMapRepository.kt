@@ -29,12 +29,12 @@ class UserMapRepository : CrudRepository<UserMap, String> {
         } > 0
     }
 
-    override suspend fun create(entity: UserMap): UserMap? = dbQuery {
+    override suspend fun create(entity: UserMap): Boolean = dbQuery {
         val statement = UsersMap.insert {
             it[mmUsername] = entity.mmUsername
             it[jiraUsername] = entity.jiraUsername
         }
-        statement.resultedValues?.firstOrNull()?.let(::mapRowToUserMap)
+        return@dbQuery !(statement.resultedValues?.isEmpty()?:true)
     }
 
     private fun mapRowToUserMap(row: ResultRow) = UserMap(

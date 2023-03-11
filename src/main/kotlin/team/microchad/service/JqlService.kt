@@ -44,11 +44,11 @@ fun getIssuesWithChangedStatusForDaysByProject(status: String, days: Int, projec
 }
 
 fun getIssuesByProject(project: String): String {
-    return "project=\"$project\""
+    return "project=\"$project\"&fields=id,key,summary,updated, description, project, issue_type"
 }
 
 fun getIssuesByProjectForDays(project: String, days: Int): String {
-    return "project=\"$project\" and createdDate >= \"-${days}d\""
+    return "project=\"$project\" and createdDate >= \"-${days}d\"&fields=id,key,summary,updated, description, project, issue_type"
 }
 
 fun getMyIssuesWithChangedStatusForDays(username: String, status: String, days: Int): String {
