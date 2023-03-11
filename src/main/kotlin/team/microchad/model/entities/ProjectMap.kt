@@ -5,9 +5,9 @@ import org.jetbrains.exposed.sql.Table
 data class ProjectMap(
     var project: String,
     var chat: String,
-    var monday: Boolean,
-    var friday: Boolean,
-    var everyday: Boolean
+    var monday: Boolean = false,
+    var friday: Boolean = false,
+    var everyday: Boolean = false
 )
 
 object ProjectsMap : Table("project_map") {
