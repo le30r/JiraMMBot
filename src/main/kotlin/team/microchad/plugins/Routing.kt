@@ -4,7 +4,9 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+
 import org.koin.ktor.ext.inject
+
 import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
 import team.microchad.dto.mm.IncomingMsg
@@ -14,7 +16,6 @@ import team.microchad.dto.mm.dialog.submissions.SchedulerSubmission
 import team.microchad.dto.mm.dialog.submissions.SelectionSubmission
 import team.microchad.dto.mm.dialog.submissions.StatisticsSubmission
 import team.microchad.dto.mm.slash.*
-import team.microchad.model.entities.ProjectsMap
 import team.microchad.model.repositories.ProjectMapRepository
 import team.microchad.service.*
 
@@ -29,32 +30,11 @@ fun Application.configureRouting() {
         get("/") {
             call.respondText("Hello, world!")
         }
-        //TODO: refactor this
+
         post("/") {
             call.respond(
-                SlashResponse(
-                    attachments = arrayOf(
-                        Attachment(
-                            fallback = "Select your option", color = "#00ff00", actions = arrayOf(
-                                Action(
-                                    "register", "Bind user to Jira", Integration(
-                                        "${Secrets.botHost}/register_dialog"
-                                    )
-                                ), Action(
-                                    "stats", "Get statistics", Integration(
-                                        "${Secrets.botHost}/statistics_dialog"
-                                    )
-                                ), Action(
-                                    "scheduler", "Scheduler settings", Integration(
-                                        "${Secrets.botHost}/scheduler_dialog"
-                                    )
-                                )
-                            )
-                        ),
-                    )
-                )
+                createJiraBotMessage()
             )
-
         }
 
         post("/register_dialog") {
@@ -113,7 +93,7 @@ fun Application.configureRouting() {
             val project = incoming.submission?.selectProject
             val radioScheduler = incoming.submission?.radioScheduler
             val channelId = mmClient.createDirectChannel(incoming.userId)
-            projectMapRepository
+            //TODO MAP INTO DB
             val outgoingMessage = OutgoingMsg(channelId, "$project, $radioScheduler, ${incoming.channelId}")
             mmClient.sendToDirectChannel(outgoingMessage)
         }
