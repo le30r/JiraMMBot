@@ -22,6 +22,9 @@ class ProjectMapRepository : CrudRepository<ProjectMap, String> {
         ProjectsMap.update({ ProjectsMap.chat eq primaryKey }) {
             it[project] = entity.project
             it[chat] = entity.chat
+            it[monday] = entity.monday
+            it[friday] = entity.friday
+            it[everyday] = entity.everyday
         } > 0
     }
 
@@ -30,6 +33,8 @@ class ProjectMapRepository : CrudRepository<ProjectMap, String> {
             it[project] = entity.project
             it[chat] = entity.chat
             it[monday] = entity.monday
+            it[friday] = entity.friday
+            it[everyday] = entity.everyday
         }
         if (statement.resultedValues.isNullOrEmpty()) return@dbQuery update(entity.chat, entity)
         return@dbQuery true

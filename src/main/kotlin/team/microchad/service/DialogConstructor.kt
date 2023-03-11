@@ -7,6 +7,7 @@ import team.microchad.dto.jira.User
 import team.microchad.dto.mm.dialog.Dialog
 import team.microchad.dto.mm.dialog.DialogMessage
 import team.microchad.dto.mm.dialog.elements.*
+import team.microchad.model.entities.ProjectMap
 import team.microchad.plugins.Secrets
 
 import java.util.UUID
@@ -24,11 +25,12 @@ fun createStatisticsDialog(triggerId: String, statuses: Array<Status>, projects:
     dialog =  getStatsDialog(statuses, projects)
 )
 
-fun createSchedulerDialog(triggerId: String, projects: Array<Project>) = DialogMessage(
+fun createSchedulerDialog(triggerId: String, projects: Array<Project>, entity: ProjectMap) = DialogMessage(
     triggerId = triggerId,
     url = "${Secrets.botHost}/scheduler",
-    dialog = getSchedulerDialog()
+    dialog = getSchedulerDialog(entity)
 )
+
 
 fun createChooseProjectDialog(triggerId: String, projects: Array<Project>) = DialogMessage(
     triggerId =  triggerId,
@@ -41,7 +43,18 @@ fun createRegisterProjectDialog(triggerId: String, projects: Array<Project>) = D
     url = "${Secrets.botHost}/register-project",
     dialog = getRegisterProjectDialog(projects)
 )
+fun createCommentIssueDialog(triggerId: String, issues: Array<Issue>) = DialogMessage (
+    triggerId = triggerId,
+    url = "${Secrets.botHost}/comment",
+    dialog = getCommentIssueDialog(issues)
+)
 
+private fun getCommentIssueDialog(issues: Array<Issue>) = Dialog(
+    callbackId = UUID.randomUUID().toString(),
+    title = "Register your channel with project",
+    elements = listOf(issuesSelect(issues), TextareaElement("Comment", "comment",
+        placeholder = "Type your comment"))
+)
 private fun getRegisterProjectDialog(projects: Array<Project>) = Dialog(
     callbackId = UUID.randomUUID().toString(),
     title = "Register your channel with project",
@@ -55,31 +68,31 @@ private fun getChooseProjectDialog(projects: Array<Project>) = Dialog(
 )
 
 
-private fun getSchedulerDialog() = Dialog(
+private fun getSchedulerDialog(entity: ProjectMap) = Dialog(
     callbackId = UUID.randomUUID().toString(),
     title = "Scheduler settings",
-    elements = listOf(mondayRadiobutton(), fridayRadiobutton(), dailyRadiobutton())
+    elements = listOf(mondayRadiobutton(entity), fridayRadiobutton(entity), dailyRadiobutton(entity))
 )
 
-private fun mondayRadiobutton()=  RadioElement (
+private fun mondayRadiobutton(entity: ProjectMap) =  RadioElement (
     displayName = "Monday",
     name = "mondayRadio",
     options = listOf(Option("on", "on"), Option("off", "off")),
-    default = "on"
+    default =  if (entity.monday) "on" else "off"
 )
 
-private fun fridayRadiobutton()=  RadioElement (
+private fun fridayRadiobutton(entity: ProjectMap)=  RadioElement (
     displayName = "Friday",
     name = "fridayRadio",
     options = listOf(Option("on", "on"), Option("off", "off")),
-    default = "off"
+    default = if (entity.friday) "on" else "off"
 )
 
-private fun dailyRadiobutton()=  RadioElement (
+private fun dailyRadiobutton(entity: ProjectMap)=  RadioElement (
     displayName = "Every day",
     name = "dailyRadio",
     options = listOf(Option("on", "on"), Option("off", "off")),
-    default = "off"
+    default = if (entity.everyday) "on" else "off"
 )
 
 private fun getRegisterDialog(users: Array<User>) = Dialog(
@@ -93,6 +106,7 @@ private fun getStatsDialog(statuses: Array<Status>, projects: Array<Project>) = 
     title = "Statistics dialog",
     elements = listOf(statusSelect(statuses), projectSelect(projects), checkboxUser(), userSelect())
 )
+
 
 private fun setSelectJiraUser(users: Array<User>) = SelectElement(
     displayName = "Jira user",
@@ -173,9 +187,9 @@ private fun minutesText() = TextElement(
 
 private fun issuesSelect(issues: Array<Issue>?) = SelectElement(
     displayName = "Choose issue",
-    name = "issuesSelect",
+    name = "issue",
     helpText = "Choose issues to comment",
-    options = issues?.map { Option(it.self, it.key) }
+    options = issues?.map { Option("${it.key} - ${it.fields.summary}", it.key) }
 )
 
 private fun commentArea() = TextareaElement(
