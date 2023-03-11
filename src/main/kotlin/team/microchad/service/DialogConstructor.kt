@@ -5,10 +5,7 @@ import team.microchad.dto.jira.Status
 import team.microchad.dto.jira.User
 import team.microchad.dto.mm.dialog.Dialog
 import team.microchad.dto.mm.dialog.DialogMessage
-import team.microchad.dto.mm.dialog.elements.CheckboxElement
-import team.microchad.dto.mm.dialog.elements.Option
-import team.microchad.dto.mm.dialog.elements.SelectElement
-import team.microchad.dto.mm.dialog.elements.TextElement
+import team.microchad.dto.mm.dialog.elements.*
 import team.microchad.plugins.Secrets
 
 import java.util.UUID
@@ -26,17 +23,25 @@ fun createStatisticsDialog(triggerId: String, statuses: Array<Status>, projects:
     dialog =  getStatsDialog(statuses, projects)
 )
 
-fun createSchedulerDialog(triggerId: String,statuses: Array<Status>) = DialogMessage(
+fun createSchedulerDialog(triggerId: String, projects: Array<Project>) = DialogMessage(
     triggerId = triggerId,
     url = "${Secrets.botHost}/scheduler",
-    dialog = getSchedulerDialog(statuses)
+    dialog = getSchedulerDialog(projects)
 )
 
 
-private fun getSchedulerDialog(statuses: Array<Status>) = Dialog(
+private fun getSchedulerDialog(projects: Array<Project>) = Dialog(
     callbackId = UUID.randomUUID().toString(),
     title = "Scheduler settings",
-    elements = listOf(statusSelect(statuses), dayOfTheWeekSelect(), hourText(), minutesText())
+    elements = listOf(projectSelect(projects), onOffRadiobutton())
+)
+
+private fun onOffRadiobutton()=  RadioElement (
+    displayName = "On/Off scheduler",
+    name = "radioScheduler",
+    options = listOf(Option("on", "on"), Option("off", "off")),
+    helpText = "You can turn on or off your scheduler job",
+    default = "on"
 )
 
 private fun getRegisterDialog(users: Array<User>) = Dialog(

@@ -3,7 +3,7 @@ package team.microchad.model.entities
 import org.jetbrains.exposed.sql.Table
 
 data class ProjectMap(
-    var id: Long?,
+    var id: Long? = null,
     var project: String,
     var chat: String
 )

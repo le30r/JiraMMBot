@@ -18,7 +18,6 @@ import org.koin.core.component.inject
 
 import team.microchad.config.MattermostConfiguration
 import team.microchad.dto.mm.DirectChannel
-import team.microchad.dto.mm.IncomingMsg
 import team.microchad.dto.mm.OutgoingMsg
 import team.microchad.dto.mm.dialog.DialogMessage
 
@@ -50,13 +49,10 @@ class MmClient : KoinComponent {
             host = configuration.webhookUrl
             appendPathSegments(configuration.token)
         }
+        contentType(ContentType.Application.Json)
         method = HttpMethod.Post
-        headers {
-            append(HttpHeaders.ContentType, ContentType.Application.Json)
-        }
         setBody(message)
     }
-
 
 
     suspend fun createDirectChannel(userId: String): String = client.request {
@@ -66,7 +62,8 @@ class MmClient : KoinComponent {
         }
         contentType(ContentType.Application.Json)
         method = HttpMethod.Post
-        setBody(listOf(configuration.botId, userId)
+        setBody(
+            listOf(configuration.botId, userId)
         )
     }.body<DirectChannel>().id
 
@@ -80,7 +77,7 @@ class MmClient : KoinComponent {
         setBody(message)
     }
 
-    suspend fun openDialog(message: DialogMessage):HttpResponse = client.request {
+    suspend fun openDialog(message: DialogMessage): HttpResponse = client.request {
         url {
             protocol = URLProtocol.HTTP
             host = configuration.openDialog
