@@ -1,5 +1,6 @@
 package team.microchad.service
 
+import team.microchad.dto.jira.Issue
 import team.microchad.dto.jira.Project
 import team.microchad.dto.jira.Status
 import team.microchad.dto.jira.User
@@ -7,6 +8,7 @@ import team.microchad.dto.mm.dialog.Dialog
 import team.microchad.dto.mm.dialog.DialogMessage
 import team.microchad.dto.mm.dialog.elements.*
 import team.microchad.plugins.Secrets
+import java.awt.TextArea
 
 import java.util.UUID
 
@@ -27,6 +29,18 @@ fun createSchedulerDialog(triggerId: String, projects: Array<Project>) = DialogM
     triggerId = triggerId,
     url = "${Secrets.botHost}/scheduler",
     dialog = getSchedulerDialog(projects)
+)
+
+fun createCommentIssueDialog(triggerId: String, projects: Array<Project>, issues: Array<Issue>) = DialogMessage(
+    triggerId =  triggerId,
+    url = "${Secrets.botHost}/commentIssue",
+    dialog = getCommentIssueDialog(projects, issues)
+)
+
+private fun getCommentIssueDialog(projects: Array<Project>, issues: Array<Issue>) = Dialog(
+    callbackId = UUID.randomUUID().toString(),
+    title = "Comment your issue!",
+    elements = listOf(projectSelect(projects), isseusSelect(issues), commentArea())
 )
 
 
@@ -131,4 +145,17 @@ private fun minutesText() = TextElement(
     maxLength = 2,
     minLength = 2,
     optional = true
+)
+
+private fun isseusSelect(issues: Array<Issue>) = SelectElement(
+    displayName = "Choose issue",
+    name = "issuesSelect",
+    helpText = "Choose issues to comment",
+    options = issues.map { Option(it.self, it.key) }
+)
+
+private fun commentArea() = TextareaElement(
+    displayName = "Comment here",
+    name = "commentArea",
+    placeholder = "Comment Here"
 )
