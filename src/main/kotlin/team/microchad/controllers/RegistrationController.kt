@@ -7,11 +7,12 @@ import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
 import team.microchad.dto.mm.IncomingMsg
 import team.microchad.dto.mm.dialog.Response
+import team.microchad.dto.mm.dialog.submissions.ProjectRegistrationSubmission
 import team.microchad.dto.mm.dialog.submissions.SelectionSubmission
 import team.microchad.dto.mm.slash.ActionResponse
-import team.microchad.model.repositories.ProjectMapRepository
 import team.microchad.service.UserService
 import team.microchad.service.createRegisterJiraDialog
+import team.microchad.service.createRegisterProjectDialog
 
 class RegistrationController : KoinComponent {
 
@@ -19,9 +20,16 @@ class RegistrationController : KoinComponent {
     private val jiraClient: JiraClient by inject()
     private val userService: UserService by inject()
 
-    suspend fun openDialog(incomingMessage: IncomingMsg): ActionResponse {
+    suspend fun openUserDialog(incomingMessage: IncomingMsg): ActionResponse {
         val users = jiraClient.getUsers()
         val dialog = createRegisterJiraDialog(incomingMessage.triggerId, users)
+        val response = mmClient.openDialog(dialog)
+        return ActionResponse("Continue registration in dialog window")
+    }
+
+    suspend fun openProjectDialog(incomingMessage: IncomingMsg):ActionResponse {
+        val projects = jiraClient.getProjects()
+        val dialog = createRegisterProjectDialog(incomingMessage.triggerId, projects)
         val response = mmClient.openDialog(dialog)
         return ActionResponse("Continue registration in dialog window")
     }
@@ -36,5 +44,11 @@ class RegistrationController : KoinComponent {
             ActionResponse("Registration canceled")
         }
         return returnVal
+    }
+
+    suspend fun registerProject(result: Response<ProjectRegistrationSubmission>) {
+        val project = result.submission?.selectProject
+        //TODO Add to DB
+        println(project.toString())
     }
 }

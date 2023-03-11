@@ -15,10 +15,7 @@ import team.microchad.controllers.SchedulerController
 import team.microchad.controllers.StatisticsController
 import team.microchad.dto.mm.IncomingMsg
 import team.microchad.dto.mm.dialog.Response
-import team.microchad.dto.mm.dialog.submissions.CommentSubmission
-import team.microchad.dto.mm.dialog.submissions.SchedulerSubmission
-import team.microchad.dto.mm.dialog.submissions.SelectionSubmission
-import team.microchad.dto.mm.dialog.submissions.StatisticsSubmission
+import team.microchad.dto.mm.dialog.submissions.*
 import team.microchad.model.repositories.ProjectMapRepository
 import team.microchad.service.*
 
@@ -46,9 +43,20 @@ fun Application.configureRouting() {
             )
         }
 
+        post("register-project_dialog") {
+            val incomingMsg = call.receive<IncomingMsg>()
+            val actionResponse = registrationController.openProjectDialog(incomingMsg)
+            call.respond(actionResponse)
+        }
+
+        post("register-project") {
+            val incomingMsg = call.receive<Response<ProjectRegistrationSubmission>>()
+            registrationController.registerProject(incomingMsg)
+        }
+
         post("/register_dialog") {
             val incomingMsg = call.receive<IncomingMsg>()
-            val actionResponse = registrationController.openDialog(incomingMsg)
+            val actionResponse = registrationController.openUserDialog(incomingMsg)
             call.respond(actionResponse)
         }
         post("/scheduler_dialog") {

@@ -32,12 +32,8 @@ private fun createActionsForJiraBot(): Array<Action> = arrayOf(
             "${Secrets.botHost}/scheduler_dialog"
         )
     ), Action(
-        "commentIssue", "Comment issue", Integration(
-            "${Secrets.botHost}/commentIssue_dialog"
-        )
-    ), Action(
-        "comment", "Comment issue", Integration(
-            "${Secrets.botHost}/comment_issue_dialog"
+        "registerProject", "Register project with channel", Integration(
+            "${Secrets.botHost}/register-project_dialog"
         )
     )
 )
