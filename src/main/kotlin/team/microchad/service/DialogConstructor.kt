@@ -27,7 +27,7 @@ fun createStatisticsDialog(triggerId: String, statuses: Array<Status>, projects:
 fun createSchedulerDialog(triggerId: String, projects: Array<Project>) = DialogMessage(
     triggerId = triggerId,
     url = "${Secrets.botHost}/scheduler",
-    dialog = getSchedulerDialog(projects)
+    dialog = getSchedulerDialog()
 )
 
 fun createChooseProjectDialog(triggerId: String, projects: Array<Project>) = DialogMessage(
@@ -55,18 +55,31 @@ private fun getChooseProjectDialog(projects: Array<Project>) = Dialog(
 )
 
 
-private fun getSchedulerDialog(projects: Array<Project>) = Dialog(
+private fun getSchedulerDialog() = Dialog(
     callbackId = UUID.randomUUID().toString(),
     title = "Scheduler settings",
-    elements = listOf(projectSelect(projects), onOffRadiobutton())
+    elements = listOf(mondayRadiobutton(), fridayRadiobutton(), dailyRadiobutton())
 )
 
-private fun onOffRadiobutton()=  RadioElement (
-    displayName = "On/Off scheduler",
-    name = "radioScheduler",
+private fun mondayRadiobutton()=  RadioElement (
+    displayName = "Monday",
+    name = "mondayRadio",
     options = listOf(Option("on", "on"), Option("off", "off")),
-    helpText = "You can turn on or off your scheduler job",
     default = "on"
+)
+
+private fun fridayRadiobutton()=  RadioElement (
+    displayName = "Friday",
+    name = "fridayRadio",
+    options = listOf(Option("on", "on"), Option("off", "off")),
+    default = "off"
+)
+
+private fun dailyRadiobutton()=  RadioElement (
+    displayName = "Every day",
+    name = "dailyRadio",
+    options = listOf(Option("on", "on"), Option("off", "off")),
+    default = "off"
 )
 
 private fun getRegisterDialog(users: Array<User>) = Dialog(
