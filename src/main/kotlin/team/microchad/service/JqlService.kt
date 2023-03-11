@@ -43,6 +43,14 @@ fun getIssuesWithChangedStatusForDaysByProject(status: String, days: Int, projec
     return "project=\"$project\" and status changed to \"$status\" AFTER -${days}d&fields=id,key,summary,updated, description, project, issue_type".toUrlForm()
 }
 
+fun getIssuesByProject(project: String): String {
+    return "project=\"$project\""
+}
+
+fun getIssuesByProjectForDays(project: String, days: Int): String {
+    return "project=\"$project\" and createdDate >= \"-${days}d\""
+}
+
 fun getMyIssuesWithChangedStatusForDays(username: String, status: String, days: Int): String {
     return "assignee=$username and status changed to \"$status\" AFTER -${days}d&fields=id,key,summary,updated, description, project, issue_type".toUrlForm()
 }
