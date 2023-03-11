@@ -9,6 +9,7 @@ import org.koin.ktor.ext.inject
 
 import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
+import team.microchad.controllers.RegistrationController
 import team.microchad.dto.mm.IncomingMsg
 import team.microchad.dto.mm.OutgoingMsg
 import team.microchad.dto.mm.dialog.Response
@@ -25,6 +26,8 @@ fun Application.configureRouting() {
     val jiraClient: JiraClient by inject()
     val userService: UserService by inject()
     val projectMapRepository: ProjectMapRepository by inject()
+    val registrationController: RegistrationController by inject()
+
     routing {
 
         get("/") {
@@ -39,11 +42,8 @@ fun Application.configureRouting() {
 
         post("/register_dialog") {
             val incomingMsg = call.receive<IncomingMsg>()
-            val users = jiraClient.getUsers()
-            val dialog = createRegisterJiraDialog(incomingMsg.triggerId, users)
-            val response = mmClient.openDialog(dialog)
-            println(response)
-            call.respond(ActionResponse("Continue registration in dialog window"))
+            val actionResponse = registrationController.openDialog(incomingMsg)
+            call.respond(actionResponse)
         }
         post("/scheduler_dialog") {
             val projects = jiraClient.getProjects()
@@ -100,11 +100,8 @@ fun Application.configureRouting() {
 
         post("/register_user") {
             val result = call.receive<Response<SelectionSubmission>>()
-            if (!result.cancelled) {
-                with(result) {
-                    userService.registerUser(userId, submission!!.jiraUser)
-                }
-            }
+            val actionResponse = registrationController.registerUser(result)
+            call.respond(actionResponse)
         }
 
     }
