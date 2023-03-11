@@ -8,6 +8,7 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 import org.jetbrains.exposed.sql.transactions.transaction
 import team.microchad.model.entities.ProjectsMap
 import team.microchad.model.entities.UsersMap
+import team.microchad.plugins.Secrets
 
 object DatabaseFactory {
 
@@ -16,14 +17,18 @@ object DatabaseFactory {
 }
 
 fun Application.dbInit() {
-    val database = Database.connect(
-        "jdbc:postgresql://localhost:5432/mmbot",
-        "org.postgresql.Driver",
-        "postgres",
-        "postgres"
-    )
+
+    val database = with(Secrets) {
+        Database.connect(
+            "jdbc:postgresql://$dbHost:$dbPort/$dbName",
+            "org.postgresql.Driver",
+            dbLogin,
+            dbPassword
+        )
+    }
     transaction(database) {
         SchemaUtils.create(UsersMap)
         SchemaUtils.create(ProjectsMap)
     }
 }
+

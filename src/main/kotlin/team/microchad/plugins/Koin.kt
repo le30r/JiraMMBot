@@ -14,6 +14,7 @@ import team.microchad.client.MmClient
 import team.microchad.config.JiraConfiguration
 import team.microchad.config.MattermostConfiguration
 import team.microchad.model.repositories.UserMapRepository
+import team.microchad.model.repositories.ProjectMapRepository
 import team.microchad.service.UserService
 
 fun Application.configureDI() {
@@ -35,6 +36,10 @@ val mmBotModule = module {
     }
 
     singleOf(::UserMapRepository) {
+        createdAtStart()
+    }
+
+    singleOf(::ProjectMapRepository) {
         createdAtStart()
     }
     factoryOf(::UserService)
