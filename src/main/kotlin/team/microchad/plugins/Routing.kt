@@ -71,7 +71,7 @@ fun Application.configureRouting() {
         post("commentIssue_dialog") {
             val result = call.receive<IncomingMsg>()
             val project = projectMapRepository.findById(result.channelId)
-            val issues = jiraClient.getByJql(getIssuesByProject(project?.project?:"").toUrlForm()).issues
+            val issues = jiraClient.getByJql(getIssuesByProject(project?.project?:"MMJIR").toUrlForm()).issues
             val test = createCommentIssueDialog(result.triggerId, issues )
             mmClient.openDialog(test)
             call.respond(ActionResponse("Comment in dialog window"))
