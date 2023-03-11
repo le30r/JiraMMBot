@@ -18,7 +18,6 @@ class SchedulerController: KoinComponent {
 
     private val mmClient: MmClient by inject()
     private val jiraClient: JiraClient by inject()
-    private val projectMapRepository: ProjectMapRepository by inject()
 
     suspend fun openDialog(incomingMsg: IncomingMsg): ActionResponse {
         val projects = jiraClient.getProjects()
@@ -28,16 +27,12 @@ class SchedulerController: KoinComponent {
     }
 
     suspend fun configureScheduler(incoming: Response<SchedulerSubmission>) {
-        val project = incoming.submission?.selectProject?:""
-        val radioScheduler = incoming.submission?.radioScheduler
+        val monday = incoming.submission?.mondayRadio
+        val friday = incoming.submission?.fridayRadio
+        val daily = incoming.submission?.dailyRadio
         val channelId = incoming.channelId
-        val projectMap = ProjectMap( project, channelId)
-        if (radioScheduler == "on") {
-            projectMapRepository.create(projectMap)
-        } else {
-            //TODO DELETE FROM DB
-        }
-        val outgoingMessage = OutgoingMsg(channelId, "$project, $radioScheduler, ${incoming.channelId}")
+        //TODO Add DB integration
+        val outgoingMessage = OutgoingMsg(channelId, "$monday, $friday, $daily")
         mmClient.sendToDirectChannel(outgoingMessage)
     }
 }

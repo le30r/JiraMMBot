@@ -4,7 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class SchedulerSubmission(
-    val selectProject: String,
-    val radioScheduler: String
+    val mondayRadio: String,
+    val fridayRadio: String,
+    val dailyRadio: String
 ) : Submission() {
 }
