@@ -1,6 +1,6 @@
 package team.microchad.utils
 
-fun String.toUrl(): String =
+fun String.toUrlForm(): String =
     replace(" ", "%20")
         .replace("\"", "%22")
         .replace("?", "%3F")

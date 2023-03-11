@@ -11,15 +11,15 @@ data class IncomingMsg(
     val channelId: String,
     @SerialName("channel_name")
     val channelName: String,
-    val command: String,
+    val command: String? = null,
     @SerialName("response_url")
-    val responseUrl: String,
+    val responseUrl: String? = null,
     @SerialName("team_domain")
     val teamDomain: String,
     @SerialName("team_id")
     val teamId: String,
-    val text: String,
-    val token: String,
+    val text: String? = null,
+    val token: String? = null,
     @SerialName("trigger_id")
     val triggerId: String,
     @SerialName("user_id")

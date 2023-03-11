@@ -7,12 +7,14 @@ import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
+import team.microchad.dto.mm.IncomingMsg
 import team.microchad.dto.mm.OutgoingMsg
-import team.microchad.dto.mm.createMessageFromParam
 import team.microchad.dto.mm.dialog.Response
 import team.microchad.dto.mm.dialog.submissions.SchedulerSubmission
 import team.microchad.dto.mm.dialog.submissions.SelectionSubmission
 import team.microchad.dto.mm.dialog.submissions.StatisticsSubmission
+import team.microchad.dto.mm.slash.*
+import team.microchad.model.repositories.ProjectMapRepository
 import team.microchad.service.*
 
 
@@ -20,52 +22,67 @@ fun Application.configureRouting() {
     val mmClient: MmClient by inject()
     val jiraClient: JiraClient by inject()
     val userService: UserService by inject()
+    val projectMapRepository: ProjectMapRepository by inject()
     routing {
 
         get("/") {
             call.respondText("Hello, world!")
         }
-
+        //TODO: refactor this
         post("/") {
-            val statuses = jiraClient.getStatuses()
-            val incomingMsg = createMessageFromParam(call.receiveParameters())
-            val dialog = createSchedulerDialog(incomingMsg.triggerId, statuses)
-            mmClient.openDialog(dialog)
-            call.respondText(
-                markdown {
-                    bold {
-                        "Continue in dialog window"
-                    }
-                }
+            call.respond(
+                SlashResponse(
+                    attachments = arrayOf(
+                        Attachment(
+                            fallback = "Select your option", color = "#00ff00", actions = arrayOf(
+                                Action(
+                                    "register", "Bind user to Jira", Integration(
+                                        "${Secrets.botHost}/register_dialog"
+                                    )
+                                ), Action(
+                                    "stats", "Get statistics", Integration(
+                                        "${Secrets.botHost}/statistics_dialog"
+                                    )
+                                ), Action(
+                                    "scheduler", "Scheduler settings", Integration(
+                                        "${Secrets.botHost}/scheduler_dialog"
+                                    )
+                                )
+                            )
+                        ),
+                    )
+                )
             )
+
         }
 
-        post("/scheduler") {
-            val incoming = call.receive<Response<SchedulerSubmission>>()
-            val status = incoming.submission?.selectStatus
-            val dayOfWeek = incoming.submission?.dayOfWeek
-            val hour = incoming.submission?.hour
-            val minutes = incoming.submission?.cronMinutes
-            val channelId = mmClient.createDirectChannel(incoming.userId)
-            val outgoingMessage = OutgoingMsg(channelId, "$status, $dayOfWeek, $hour, $minutes")
-            mmClient.sendToDirectChannel(outgoingMessage)
+        post("/register_dialog") {
+            val incomingMsg = call.receive<IncomingMsg>()
+            val users = jiraClient.getUsers()
+            val dialog = createRegisterJiraDialog(incomingMsg.triggerId, users)
+            val response = mmClient.openDialog(dialog)
+            println(response)
+            call.respond(ActionResponse("Continue registration in dialog window"))
+        }
+        post("/scheduler_dialog") {
+            val statuses = jiraClient.getStatuses()
+            val incomingMsg = call.receive<IncomingMsg>()
+            val dialog = createSchedulerDialog(incomingMsg.triggerId, statuses)
+            mmClient.openDialog(dialog)
+            call.respond(ActionResponse("Continue setting in dialog window"))
         }
 
         post("/statistics_dialog") {
             //TODO: Change endpoint after testing, move code into another class or fun
             val statuses = jiraClient.getStatuses()
             val projects = jiraClient.getProjects()
-            val incomingMsg = createMessageFromParam(call.receiveParameters())
+            val incomingMsg = call.receive<IncomingMsg>()
             val dialog = createStatisticsDialog(incomingMsg.triggerId, statuses, projects)
             mmClient.openDialog(dialog)
-            call.respondText(
-                markdown {
-                    bold {
-                        "Continue in dialog window"
-                    }
-                }
-            )
+            call.respond(ActionResponse("Continue in dialog window"))
         }
+
+
 
         post("/statistics") {
             val incoming = call.receive<Response<StatisticsSubmission>>()
@@ -90,18 +107,15 @@ fun Application.configureRouting() {
             println(call.receiveText())
         }
 
-        post("/register_dialog") {
-            val incomingMsg = createMessageFromParam(call.receiveParameters())
-            val users = jiraClient.getUsers()
-            val dialog = createRegisterJiraDialog(incomingMsg.triggerId, users)
-            mmClient.openDialog(dialog)
-            call.respondText(
-                markdown {
-                    bold {
-                        "Continue registration in dialog window"
-                    }
-                }
-            )
+        post("/scheduler") {
+            val incoming = call.receive<Response<SchedulerSubmission>>()
+            val status = incoming.submission?.selectStatus
+            val dayOfWeek = incoming.submission?.dayOfWeek
+            val hour = incoming.submission?.hour
+            val minutes = incoming.submission?.cronMinutes
+            val channelId = mmClient.createDirectChannel(incoming.userId)
+            val outgoingMessage = OutgoingMsg(channelId, "$status, $dayOfWeek, $hour, $minutes")
+            mmClient.sendToDirectChannel(outgoingMessage)
         }
 
         post("/register_user") {

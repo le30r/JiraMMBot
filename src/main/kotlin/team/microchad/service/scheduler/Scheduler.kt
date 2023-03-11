@@ -11,16 +11,21 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
+import team.microchad.model.repositories.ProjectMapRepository
+import team.microchad.plugins.Secrets
+import team.microchad.service.getIssuesByStatusExprAndProject
 import team.microchad.service.getOutgoingMessageForIssues
 
 val scheduler = kjob(JdbiKJob) {
-    connectionString =
-        "jdbc:postgresql://localhost:5432/kjob?user=postgres&password=postgres" // JDBC connection string
+    connectionString = with(Secrets) {
+        "jdbc:postgresql://$dbHost:$dbPort/kjob?user=$dbLogin&password=$dbPassword" // JDBC connection string
+    }
+
     extension(KronModule)
 }.start()
 
-fun scheduleMessageSending(name: String ,cronExpression: String, jql: String) {
-    scheduler(Kron).kron(MessageJob(name, cronExpression, jql)) {
+fun scheduleMessageSending(name: String ,cronExpression: String, statusExpression: String) {
+    scheduler(Kron).kron(MessageJob(name, cronExpression, statusExpression)) {
         executionType = JobExecutionType.BLOCKING
 
         maxRetries = 3
@@ -30,14 +35,23 @@ fun scheduleMessageSending(name: String ,cronExpression: String, jql: String) {
     }
 }
 
-class MessageJob(name: String, cron: String, private val jql: String) : KronJob(name, cron), KoinComponent {
+class MessageJob(name: String, cron: String, private val statusExpression: String) : KronJob(name, cron), KoinComponent {
     private val jiraClient: JiraClient by inject()
     private val mmClient: MmClient by inject()
+    private val repository: ProjectMapRepository by inject()
     //TODO: implement channel selection
     suspend fun sendMessageWithResultOfJql() {
-        val result = jiraClient.getByJql(jql)
-        val msg = getOutgoingMessageForIssues("", result.issues)
-        mmClient.send(msg)
+
+        for (project in repository.findAll()) {
+            val jql = getIssuesByStatusExprAndProject(statusExpression, project.project)
+            val result = jiraClient.getByJql(jql)
+
+            val msg = getOutgoingMessageForIssues(project.chat, result.issues)
+            val serverResponse = mmClient.sendToDirectChannel(msg)
+            println(serverResponse)
+        }
+
+
     }
 }
 
