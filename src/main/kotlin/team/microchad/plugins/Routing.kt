@@ -23,6 +23,7 @@ import team.microchad.dto.mm.slash.*
 import team.microchad.model.entities.ProjectMap
 import team.microchad.model.repositories.ProjectMapRepository
 import team.microchad.service.*
+import team.microchad.utils.toUrlForm
 import javax.lang.model.type.TypeVariable
 
 
@@ -70,9 +71,10 @@ fun Application.configureRouting() {
         post("commentIssue_dialog") {
             val result = call.receive<IncomingMsg>()
             val project = projectMapRepository.findById(result.channelId)
-            val issues = jiraClient.getByJql(getIssuesByProject(project?.project?:"")).issues
+            val issues = jiraClient.getByJql(getIssuesByProject(project?.project?:"").toUrlForm()).issues
             val test = createCommentIssueDialog(result.triggerId, issues )
             mmClient.openDialog(test)
+            call.respond(ActionResponse("Comment in dialog window"))
         }
 
         post("/statistics") {
