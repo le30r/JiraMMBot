@@ -10,6 +10,8 @@ import team.microchad.dto.mm.dialog.Response
 import team.microchad.dto.mm.dialog.submissions.ProjectRegistrationSubmission
 import team.microchad.dto.mm.dialog.submissions.SelectionSubmission
 import team.microchad.dto.mm.slash.ActionResponse
+import team.microchad.model.entities.ProjectMap
+import team.microchad.model.repositories.ProjectMapRepository
 import team.microchad.service.UserService
 import team.microchad.service.createRegisterJiraDialog
 import team.microchad.service.createRegisterProjectDialog
@@ -19,6 +21,7 @@ class RegistrationController : KoinComponent {
     private val mmClient: MmClient by inject()
     private val jiraClient: JiraClient by inject()
     private val userService: UserService by inject()
+    private val projectMapRepository: ProjectMapRepository by inject()
 
     suspend fun openUserDialog(incomingMessage: IncomingMsg): ActionResponse {
         val users = jiraClient.getUsers()
@@ -48,7 +51,7 @@ class RegistrationController : KoinComponent {
 
     suspend fun registerProject(result: Response<ProjectRegistrationSubmission>) {
         val project = result.submission?.selectProject
-        //TODO Add to DB
+        projectMapRepository.create(ProjectMap(project?: "", result.channelId))
         println(project.toString())
     }
 }

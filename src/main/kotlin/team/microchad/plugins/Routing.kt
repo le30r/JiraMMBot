@@ -78,6 +78,11 @@ fun Application.configureRouting() {
             call.respond(actionResponse)
         }
 
+        post("/comment_dialog") {
+            val incoming = call.receive<IncomingMsg>()
+            call.respond(issueController.commentIssueDialog(incoming))
+        }
+
         post("/issue") {
             val incoming = call.receive<Response<StatisticsSubmission>>()
 

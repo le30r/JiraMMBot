@@ -36,7 +36,7 @@ class StatisticsController:KoinComponent {
             val jiraUser = userService.getJiraUsername(userSelect!!)
             getUserIssuesWithStatus(jiraUser, status ?: "", project ?: "")
         } else {
-            getIssuesWithChangedStatusByProject(status ?: "", project ?: "")
+            getIssuesWithStatusByProject(status ?: "", project ?: "")
         }
         val channelId = mmClient.createDirectChannel(incoming.userId)
         val responseJira = jiraClient.getByJql(jqlRequest)
