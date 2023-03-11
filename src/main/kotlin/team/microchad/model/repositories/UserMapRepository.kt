@@ -34,7 +34,7 @@ class UserMapRepository : CrudRepository<UserMap, String> {
             it[mmUsername] = entity.mmUsername
             it[jiraUsername] = entity.jiraUsername
         }
-        return@dbQuery !(statement.resultedValues?.isEmpty()?:true)
+        return@dbQuery !statement.resultedValues.isNullOrEmpty()
     }
 
     private fun mapRowToUserMap(row: ResultRow) = UserMap(

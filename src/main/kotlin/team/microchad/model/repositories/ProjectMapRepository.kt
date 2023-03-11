@@ -31,7 +31,7 @@ class ProjectMapRepository : CrudRepository<ProjectMap, String> {
             it[chat] = entity.chat
             it[monday] = entity.monday
         }
-        if (statement.resultedValues?.isEmpty() == true) return@dbQuery update(entity.chat, entity)
+        if (statement.resultedValues.isNullOrEmpty()) return@dbQuery update(entity.chat, entity)
         return@dbQuery true
     }
 
