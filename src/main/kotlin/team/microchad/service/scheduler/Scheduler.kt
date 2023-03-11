@@ -47,7 +47,7 @@ class MessageJob(name: String, private val schedulerSlot: SchedulerSlot, private
             }
             (SchedulerSlot.FRIDAY
                     ) -> {
-                repository.findAll().filter { it.monday }
+                repository.findAll().filter { it.friday }
             }
             (SchedulerSlot.DAILY) -> {
                 repository.findAll().filter { it.everyday }
