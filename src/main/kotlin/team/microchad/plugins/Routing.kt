@@ -18,6 +18,7 @@ import team.microchad.dto.mm.dialog.submissions.SchedulerSubmission
 import team.microchad.dto.mm.dialog.submissions.SelectionSubmission
 import team.microchad.dto.mm.dialog.submissions.StatisticsSubmission
 import team.microchad.dto.mm.slash.*
+import team.microchad.model.entities.ProjectMap
 import team.microchad.model.repositories.ProjectMapRepository
 import team.microchad.service.*
 
@@ -63,8 +64,6 @@ fun Application.configureRouting() {
             call.respond(actionResponse)
         }
 
-
-
         post("/statistics") {
             val incoming = call.receive<Response<StatisticsSubmission>>()
             statisticsController.sendStatistics(incoming)
@@ -76,10 +75,15 @@ fun Application.configureRouting() {
 
         post("/scheduler") {
             val incoming = call.receive<Response<SchedulerSubmission>>()
-            val project = incoming.submission?.selectProject
+            val project = incoming.submission?.selectProject?:""
             val radioScheduler = incoming.submission?.radioScheduler
-            val channelId = mmClient.createDirectChannel(incoming.userId)
-            //TODO MAP INTO DB
+            val channelId = incoming.channelId
+            val projectMap = ProjectMap(null, project, channelId)
+            if (radioScheduler == "on") {
+                projectMapRepository.create(projectMap)
+            } else {
+                //TODO DELETE FROM DB
+            }
             val outgoingMessage = OutgoingMsg(channelId, "$project, $radioScheduler, ${incoming.channelId}")
             mmClient.sendToDirectChannel(outgoingMessage)
         }
