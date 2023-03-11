@@ -25,8 +25,6 @@ class JiraClient : KoinComponent {
 
     private val configuration: JiraConfiguration by inject()
 
-
-    //TODO method to just send a jql. Create a jqlFactory
     suspend fun getByJql(jql: String): JiraJqlResponse {
         val params = Parameters.build {
             append("jql", jql)
@@ -79,7 +77,7 @@ class JiraClient : KoinComponent {
                         issue,
                         issueKey,
                         comment
-                    )//TODO Implement parameter injection instead of ?
+                    )
                 }
                 setBody(Comment(body = newComment, visibility = null))
                 contentType(ContentType.Application.Json)

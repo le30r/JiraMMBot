@@ -9,7 +9,6 @@ import team.microchad.model.repositories.UserMapRepository
 class UserService : KoinComponent {
     private val repository: UserMapRepository by inject()
 
-    //TODO: Implement user registration into database
     suspend fun registerUser(userId: String, jiraUserId: String) {
         UserMapRepository().create(UserMap(mmUsername = userId, jiraUsername = jiraUserId))
     }
