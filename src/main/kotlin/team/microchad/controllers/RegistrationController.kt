@@ -18,7 +18,6 @@ class RegistrationController : KoinComponent {
     private val mmClient: MmClient by inject()
     private val jiraClient: JiraClient by inject()
     private val userService: UserService by inject()
-    private val projectMapRepository: ProjectMapRepository by inject()
 
     suspend fun openDialog(incomingMessage: IncomingMsg): ActionResponse {
         val users = jiraClient.getUsers()

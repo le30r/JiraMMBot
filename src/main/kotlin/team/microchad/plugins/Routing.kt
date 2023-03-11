@@ -10,6 +10,7 @@ import org.koin.ktor.ext.inject
 import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
 import team.microchad.controllers.RegistrationController
+import team.microchad.controllers.StatisticsController
 import team.microchad.dto.mm.IncomingMsg
 import team.microchad.dto.mm.OutgoingMsg
 import team.microchad.dto.mm.dialog.Response
@@ -26,7 +27,9 @@ fun Application.configureRouting() {
     val jiraClient: JiraClient by inject()
     val userService: UserService by inject()
     val projectMapRepository: ProjectMapRepository by inject()
+
     val registrationController: RegistrationController by inject()
+    val statisticsController: StatisticsController by inject()
 
     routing {
 
@@ -55,33 +58,16 @@ fun Application.configureRouting() {
 
         post("/statistics_dialog") {
             //TODO: Change endpoint after testing, move code into another class or fun
-            val statuses = jiraClient.getStatuses()
-            val projects = jiraClient.getProjects()
             val incomingMsg = call.receive<IncomingMsg>()
-            val dialog = createStatisticsDialog(incomingMsg.triggerId, statuses, projects)
-            mmClient.openDialog(dialog)
-            call.respond(ActionResponse("Continue in dialog window"))
+            val actionResponse = statisticsController.openDialog(incomingMsg)
+            call.respond(actionResponse)
         }
 
 
 
         post("/statistics") {
             val incoming = call.receive<Response<StatisticsSubmission>>()
-            val status = incoming.submission?.selectStatus
-            val project = incoming.submission?.selectProject
-            val userCheckbox = incoming.submission?.userCheckbox
-            val userSelect = incoming.submission?.userSelect
-
-            val jqlRequest = if (userCheckbox == "true") {
-                val jiraUser = userService.getJiraUsername(userSelect!!)
-                getUserIssuesWithStatus(jiraUser, status ?: "", project ?: "")
-            } else {
-                getIssuesWithChangedStatusByProject(status ?: "", project ?: "")
-            }
-            val channelId = mmClient.createDirectChannel(incoming.userId)
-            val responseJira = jiraClient.getByJql(jqlRequest)
-            val outgoingMessage = getOutgoingMessageForIssues(channelId, responseJira.issues)
-            mmClient.sendToDirectChannel(outgoingMessage)
+            statisticsController.sendStatistics(incoming)
         }
 
         post("/dialog") {
