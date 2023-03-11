@@ -35,5 +35,9 @@ private fun createActionsForJiraBot(): Array<Action> = arrayOf(
         "commentIssue", "Comment issue", Integration(
             "${Secrets.botHost}/commentIssue_dialog"
         )
+    ), Action(
+        "comment", "Comment issue", Integration(
+            "${Secrets.botHost}/comment_issue_dialog"
+        )
     )
 )

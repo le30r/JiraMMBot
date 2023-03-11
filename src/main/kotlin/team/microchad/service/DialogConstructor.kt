@@ -8,7 +8,6 @@ import team.microchad.dto.mm.dialog.Dialog
 import team.microchad.dto.mm.dialog.DialogMessage
 import team.microchad.dto.mm.dialog.elements.*
 import team.microchad.plugins.Secrets
-import java.awt.TextArea
 
 import java.util.UUID
 
@@ -31,16 +30,16 @@ fun createSchedulerDialog(triggerId: String, projects: Array<Project>) = DialogM
     dialog = getSchedulerDialog(projects)
 )
 
-fun createCommentIssueDialog(triggerId: String, projects: Array<Project>, issues: Array<Issue>) = DialogMessage(
+fun createCommentIssueDialog(triggerId: String, issues: Array<Issue>?) = DialogMessage(
     triggerId =  triggerId,
-    url = "${Secrets.botHost}/commentIssue",
-    dialog = getCommentIssueDialog(projects, issues)
+    url = "${Secrets.botHost}/comment",
+    dialog = getCommentIssueDialog(issues)
 )
 
-private fun getCommentIssueDialog(projects: Array<Project>, issues: Array<Issue>) = Dialog(
+private fun getCommentIssueDialog(issues: Array<Issue>?) = Dialog(
     callbackId = UUID.randomUUID().toString(),
     title = "Comment your issue!",
-    elements = listOf(projectSelect(projects), isseusSelect(issues), commentArea())
+    elements = listOf(issuesSelect(issues), commentArea())
 )
 
 
@@ -147,11 +146,11 @@ private fun minutesText() = TextElement(
     optional = true
 )
 
-private fun isseusSelect(issues: Array<Issue>) = SelectElement(
+private fun issuesSelect(issues: Array<Issue>?) = SelectElement(
     displayName = "Choose issue",
     name = "issuesSelect",
     helpText = "Choose issues to comment",
-    options = issues.map { Option(it.self, it.key) }
+    options = issues?.map { Option(it.self, it.key) }
 )
 
 private fun commentArea() = TextareaElement(

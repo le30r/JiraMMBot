@@ -11,10 +11,10 @@ class UserService : KoinComponent {
 
     //TODO: Implement user registration into database
     suspend fun registerUser(userId: String, jiraUserId: String) {
-        UserMapRepository().create(UserMap(id = null, mmUsername = userId, jiraUsername = jiraUserId))
+        UserMapRepository().create(UserMap(mmUsername = userId, jiraUsername = jiraUserId))
     }
 
     suspend fun getJiraUsername(mmUsername: String): String {
-        return UserMapRepository().findByMmUsername(mmUsername)?.jiraUsername.orEmpty()
+        return UserMapRepository().findById(mmUsername)?.jiraUsername.orEmpty()
     }
 }

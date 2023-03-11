@@ -11,9 +11,11 @@ import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
 import team.microchad.controllers.RegistrationController
 import team.microchad.controllers.StatisticsController
+import team.microchad.dto.jira.Issue
 import team.microchad.dto.mm.IncomingMsg
 import team.microchad.dto.mm.OutgoingMsg
 import team.microchad.dto.mm.dialog.Response
+import team.microchad.dto.mm.dialog.submissions.CommentSubmission
 import team.microchad.dto.mm.dialog.submissions.SchedulerSubmission
 import team.microchad.dto.mm.dialog.submissions.SelectionSubmission
 import team.microchad.dto.mm.dialog.submissions.StatisticsSubmission
@@ -21,6 +23,7 @@ import team.microchad.dto.mm.slash.*
 import team.microchad.model.entities.ProjectMap
 import team.microchad.model.repositories.ProjectMapRepository
 import team.microchad.service.*
+import javax.lang.model.type.TypeVariable
 
 
 fun Application.configureRouting() {
@@ -64,6 +67,14 @@ fun Application.configureRouting() {
             call.respond(actionResponse)
         }
 
+        post("commentIssue_dialog") {
+            val result = call.receive<IncomingMsg>()
+            val project = projectMapRepository.findById(result.channelId)
+            val issues = jiraClient.getByJql(getIssuesByProject(project?.project?:"")).issues
+            val test = createCommentIssueDialog(result.triggerId, issues )
+            mmClient.openDialog(test)
+        }
+
         post("/statistics") {
             val incoming = call.receive<Response<StatisticsSubmission>>()
             statisticsController.sendStatistics(incoming)
@@ -78,7 +89,7 @@ fun Application.configureRouting() {
             val project = incoming.submission?.selectProject?:""
             val radioScheduler = incoming.submission?.radioScheduler
             val channelId = incoming.channelId
-            val projectMap = ProjectMap(null, project, channelId)
+            val projectMap = ProjectMap(project, channelId)
             if (radioScheduler == "on") {
                 projectMapRepository.create(projectMap)
             } else {
@@ -94,12 +105,11 @@ fun Application.configureRouting() {
             call.respond(actionResponse)
         }
 
-        post("commentIssue_dialog") {
-            val result = call.receive<IncomingMsg>()
-            val projects = jiraClient.getProjects()
-            //TODO GET ISSUES
-//            val test = createCommentIssueDialog(result.triggerId, projects, )
+        post("/comment") {
+            val result = call.receive<Response<CommentSubmission>>()
+            jiraClient.commentIssue(result.submission?.issue?:"", result.submission?.comment?:"")
         }
 
     }
 }
+

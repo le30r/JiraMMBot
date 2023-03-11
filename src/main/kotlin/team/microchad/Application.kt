@@ -20,4 +20,3 @@ fun Application.module() {
     dbInit()
     configureScheduler()
 }
-

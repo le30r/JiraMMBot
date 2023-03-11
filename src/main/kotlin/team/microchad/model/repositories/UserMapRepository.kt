@@ -5,25 +5,25 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import team.microchad.model.entities.UserMap
 import team.microchad.model.entities.UsersMap
 
-class UserMapRepository : CrudRepository<UserMap> {
+class UserMapRepository : CrudRepository<UserMap, String> {
     override suspend fun findAll(): List<UserMap> = dbQuery {
         UsersMap.selectAll().map(::mapRowToUserMap)
     }
 
-    override suspend fun findById(id: Long): UserMap? = dbQuery {
-        UsersMap.select(UsersMap.id eq id).map(::mapRowToUserMap).firstOrNull()
+    override suspend fun findById(primaryKey: String): UserMap? = dbQuery {
+        UsersMap.select(UsersMap.mmUsername eq primaryKey).map(::mapRowToUserMap).firstOrNull()
     }
 
     suspend fun  findByMmUsername(mmUsername: String): UserMap? = dbQuery {
         UsersMap.select(UsersMap.mmUsername eq mmUsername).map(::mapRowToUserMap).firstOrNull()
     }
 
-    override suspend fun delete(id: Long): Boolean = dbQuery {
-        UsersMap.deleteWhere { UsersMap.id eq id } > 0
+    override suspend fun delete(primaryKey: String): Boolean = dbQuery {
+        UsersMap.deleteWhere { UsersMap.mmUsername eq primaryKey } > 0
     }
 
-    override suspend fun update(id: Long, entity: UserMap): Boolean = dbQuery {
-        UsersMap.update({ UsersMap.id eq id }) {
+    override suspend fun update(primaryKey: String, entity: UserMap): Boolean = dbQuery {
+        UsersMap.update({ UsersMap.mmUsername eq primaryKey }) {
             it[mmUsername] = entity.mmUsername
             it[jiraUsername] = entity.jiraUsername
         } > 0
@@ -38,7 +38,6 @@ class UserMapRepository : CrudRepository<UserMap> {
     }
 
     private fun mapRowToUserMap(row: ResultRow) = UserMap(
-        id = row[UsersMap.id],
         mmUsername = row[UsersMap.mmUsername],
         jiraUsername = row[UsersMap.jiraUsername]
     )
