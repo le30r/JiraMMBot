@@ -18,7 +18,6 @@ import org.koin.core.component.inject
 
 import team.microchad.config.MattermostConfiguration
 import team.microchad.dto.mm.DirectChannel
-import team.microchad.dto.mm.IncomingMsg
 import team.microchad.dto.mm.OutgoingMsg
 import team.microchad.dto.mm.dialog.DialogMessage
 

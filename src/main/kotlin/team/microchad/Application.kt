@@ -4,9 +4,7 @@ import io.ktor.server.application.*
 import io.ktor.server.config.*
 import team.microchad.model.db.dbInit
 import team.microchad.plugins.*
-import team.microchad.service.scheduler.MessageJob
 import team.microchad.service.scheduler.configureScheduler
-import team.microchad.service.scheduler.scheduleMessageSending
 import java.util.*
 
 fun main(args: Array<String>): Unit =

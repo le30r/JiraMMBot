@@ -1,7 +1,5 @@
 package team.microchad.service.scheduler
 
-import team.microchad.service.getIssuesWithChangedStatus
-import team.microchad.service.getIssuesWithStatus
 
 const val WEEKLY_CRON_MONDAY_EXPRESSION = "0 0 6 ? * 2"  // 9:00 every Monday
 const val WEEKLY_FRIDAY_CRON_EXPRESSION = "0 0 15 ? * 6" // 18:00 every Friday

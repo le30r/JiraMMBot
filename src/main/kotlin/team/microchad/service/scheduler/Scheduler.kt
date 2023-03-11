@@ -6,7 +6,6 @@ import kjob.core.kjob
 import kjob.jdbi.JdbiKJob
 import kjob.kron.Kron
 import kjob.kron.KronModule
-import kotlinx.coroutines.coroutineScope
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import team.microchad.client.JiraClient

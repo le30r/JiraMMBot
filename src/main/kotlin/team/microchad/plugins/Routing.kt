@@ -14,6 +14,7 @@ import team.microchad.dto.mm.dialog.submissions.SchedulerSubmission
 import team.microchad.dto.mm.dialog.submissions.SelectionSubmission
 import team.microchad.dto.mm.dialog.submissions.StatisticsSubmission
 import team.microchad.dto.mm.slash.*
+import team.microchad.model.entities.ProjectsMap
 import team.microchad.model.repositories.ProjectMapRepository
 import team.microchad.service.*
 
@@ -65,9 +66,9 @@ fun Application.configureRouting() {
             call.respond(ActionResponse("Continue registration in dialog window"))
         }
         post("/scheduler_dialog") {
-            val statuses = jiraClient.getStatuses()
+            val projects = jiraClient.getProjects()
             val incomingMsg = call.receive<IncomingMsg>()
-            val dialog = createSchedulerDialog(incomingMsg.triggerId, statuses)
+            val dialog = createSchedulerDialog(incomingMsg.triggerId, projects)
             mmClient.openDialog(dialog)
             call.respond(ActionResponse("Continue setting in dialog window"))
         }
@@ -109,18 +110,15 @@ fun Application.configureRouting() {
 
         post("/scheduler") {
             val incoming = call.receive<Response<SchedulerSubmission>>()
-            val status = incoming.submission?.selectStatus
-            val dayOfWeek = incoming.submission?.dayOfWeek
-            val hour = incoming.submission?.hour
-            val minutes = incoming.submission?.cronMinutes
+            val project = incoming.submission?.selectProject
+            val radioScheduler = incoming.submission?.radioScheduler
             val channelId = mmClient.createDirectChannel(incoming.userId)
-            val outgoingMessage = OutgoingMsg(channelId, "$status, $dayOfWeek, $hour, $minutes")
+            projectMapRepository
+            val outgoingMessage = OutgoingMsg(channelId, "$project, $radioScheduler, ${incoming.channelId}")
             mmClient.sendToDirectChannel(outgoingMessage)
         }
 
         post("/register_user") {
-            //todo: implement adding into DB
-            //println(call.receiveText())
             val result = call.receive<Response<SelectionSubmission>>()
             if (!result.cancelled) {
                 with(result) {

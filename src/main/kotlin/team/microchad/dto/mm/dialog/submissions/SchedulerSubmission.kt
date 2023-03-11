@@ -1,15 +1,10 @@
 package team.microchad.dto.mm.dialog.submissions
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 class SchedulerSubmission(
-    val selectStatus: String,
-    val dayOfWeek: String,
-    val hour: String,
-    @SerialName("minutes")
-    private val _minutes: String?
+    val selectProject: String,
+    val radioScheduler: String
 ) : Submission() {
-    val cronMinutes: String = _minutes?:"0"
 }
