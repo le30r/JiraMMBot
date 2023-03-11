@@ -25,17 +25,22 @@ class ProjectMapRepository : CrudRepository<ProjectMap, String> {
         } > 0
     }
 
-    override suspend fun create(entity: ProjectMap): ProjectMap? = dbQuery {
+    override suspend fun create(entity: ProjectMap): Boolean = dbQuery {
         val statement = ProjectsMap.insert {
             it[project] = entity.project
             it[chat] = entity.chat
+            it[monday] = entity.monday
         }
-        statement.resultedValues?.firstOrNull()?.let(::mapRowToProjectMap)
+        if (statement.resultedValues?.isEmpty() == true) return@dbQuery update(entity.chat, entity)
+        return@dbQuery true
     }
 
     private fun mapRowToProjectMap(row: ResultRow) = ProjectMap(
         project = row[ProjectsMap.project],
-        chat = row[ProjectsMap.chat]
+        chat = row[ProjectsMap.chat],
+        monday = row[ProjectsMap.monday],
+        friday = row[ProjectsMap.friday],
+        everyday = row[ProjectsMap.everyday]
     )
 
 }
