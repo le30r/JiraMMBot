@@ -30,16 +30,16 @@ fun createSchedulerDialog(triggerId: String, projects: Array<Project>) = DialogM
     dialog = getSchedulerDialog(projects)
 )
 
-fun createCommentIssueDialog(triggerId: String, issues: Array<Issue>?) = DialogMessage(
+fun createChooseProjectDialog(triggerId: String, projects: Array<Project>) = DialogMessage(
     triggerId =  triggerId,
-    url = "${Secrets.botHost}/comment",
-    dialog = getCommentIssueDialog(issues)
+    url = "${Secrets.botHost}/chooseIssue_dialog",
+    dialog = getChooseProjectDialog(projects)
 )
 
-private fun getCommentIssueDialog(issues: Array<Issue>?) = Dialog(
+private fun getChooseProjectDialog(projects: Array<Project>) = Dialog(
     callbackId = UUID.randomUUID().toString(),
     title = "Comment your issue!",
-    elements = listOf(issuesSelect(issues), commentArea())
+    elements = listOf(projectSelect(projects))
 )
 
 

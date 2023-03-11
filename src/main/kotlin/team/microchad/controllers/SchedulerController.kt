@@ -18,8 +18,7 @@ class SchedulerController: KoinComponent {
 
     private val mmClient: MmClient by inject()
     private val jiraClient: JiraClient by inject()
-    val userService: UserService by inject()
-    val projectMapRepository: ProjectMapRepository by inject()
+    private val projectMapRepository: ProjectMapRepository by inject()
 
     suspend fun openDialog(incomingMsg: IncomingMsg): ActionResponse {
         val projects = jiraClient.getProjects()
@@ -32,7 +31,7 @@ class SchedulerController: KoinComponent {
         val project = incoming.submission?.selectProject?:""
         val radioScheduler = incoming.submission?.radioScheduler
         val channelId = incoming.channelId
-        val projectMap = ProjectMap(null, project, channelId)
+        val projectMap = ProjectMap( project, channelId)
         if (radioScheduler == "on") {
             projectMapRepository.create(projectMap)
         } else {

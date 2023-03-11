@@ -9,10 +9,10 @@ import org.koin.ktor.ext.inject
 
 import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
+import team.microchad.controllers.IssueController
 import team.microchad.controllers.RegistrationController
 import team.microchad.controllers.SchedulerController
 import team.microchad.controllers.StatisticsController
-import team.microchad.dto.jira.Issue
 import team.microchad.dto.mm.IncomingMsg
 import team.microchad.dto.mm.dialog.Response
 import team.microchad.dto.mm.dialog.submissions.CommentSubmission
@@ -21,8 +21,6 @@ import team.microchad.dto.mm.dialog.submissions.SelectionSubmission
 import team.microchad.dto.mm.dialog.submissions.StatisticsSubmission
 import team.microchad.model.repositories.ProjectMapRepository
 import team.microchad.service.*
-import team.microchad.utils.toUrlForm
-import javax.lang.model.type.TypeVariable
 
 
 fun Application.configureRouting() {
@@ -34,6 +32,7 @@ fun Application.configureRouting() {
     val registrationController: RegistrationController by inject()
     val statisticsController: StatisticsController by inject()
     val schedulerController: SchedulerController by inject()
+    val issueController: IssueController by inject()
 
     routing {
 
@@ -60,18 +59,21 @@ fun Application.configureRouting() {
 
         post("/statistics_dialog") {
             //TODO: Change endpoint after testing, move code into another class or fun
-            val incomingMsg = call.receive<IncomingMsg>()
-            val actionResponse = statisticsController.openDialog(incomingMsg)
+            val incoming = call.receive<IncomingMsg>()
+            val actionResponse = statisticsController.openDialog(incoming)
             call.respond(actionResponse)
         }
 
-        post("commentIssue_dialog") {
-            val result = call.receive<IncomingMsg>()
-            val project = projectMapRepository.findById(result.channelId)
-            val issues = jiraClient.getByJql(getIssuesByProject(project?.project?:"MMJIR").toUrlForm()).issues
-            val test = createCommentIssueDialog(result.triggerId, issues )
-            mmClient.openDialog(test)
-            call.respond(ActionResponse("Comment in dialog window"))
+        post("/issue_dialog") {
+            val incoming = call.receive<IncomingMsg>()
+            val actionResponse = issueController.openProjectDialog(incoming)
+            call.respond(actionResponse)
+        }
+
+        post("/issue") {
+            val incoming = call.receive<Response<StatisticsSubmission>>()
+
+//            call.respond()
         }
 
         post("/statistics") {

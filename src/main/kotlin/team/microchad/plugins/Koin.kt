@@ -19,6 +19,7 @@ import team.microchad.service.UserService
 import team.microchad.controllers.StatisticsController
 import team.microchad.controllers.RegistrationController
 import team.microchad.controllers.SchedulerController
+import team.microchad.controllers.IssueController
 
 fun Application.configureDI() {
     install(Koin) {
@@ -51,5 +52,6 @@ val mmBotModule = module {
     factoryOf(::RegistrationController)
     factoryOf(::StatisticsController)
     factoryOf(::SchedulerController)
+    factoryOf(::IssueController)
 
 }
