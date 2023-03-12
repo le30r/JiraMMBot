@@ -9,22 +9,22 @@ import team.microchad.dto.mm.IncomingMsg
 import team.microchad.dto.mm.dialog.Response
 import team.microchad.dto.mm.dialog.submissions.StatisticsSubmission
 import team.microchad.dto.mm.slash.ActionResponse
-import team.microchad.model.repositories.ProjectMapRepository
 import team.microchad.service.*
 
-class StatisticsController:KoinComponent {
+private const val CONTINUE_IN_DIALOG_WINDOW = "Continue in dialog window"
+
+class StatisticsController : KoinComponent {
 
     private val mmClient: MmClient by inject()
     private val jiraClient: JiraClient by inject()
     private val userService: UserService by inject()
-    val projectMapRepository: ProjectMapRepository by inject()
 
     suspend fun openDialog(incomingMessage: IncomingMsg): ActionResponse {
         val statuses = jiraClient.getStatuses()
         val projects = jiraClient.getProjects()
         val dialog = createStatisticsDialog(incomingMessage.triggerId, statuses, projects)
         mmClient.openDialog(dialog)
-        return ActionResponse("Continue in dialog window")
+        return ActionResponse(CONTINUE_IN_DIALOG_WINDOW)
     }
 
     suspend fun sendStatistics(incoming: Response<StatisticsSubmission>) {
