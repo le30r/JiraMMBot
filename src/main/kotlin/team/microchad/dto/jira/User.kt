@@ -12,5 +12,5 @@ data class User(
     var active: Boolean? = null,
     var deleted: Boolean? = null,
     var timeZone: String? = null,
-    var locale:String? = null
+    var locale: String? = null
 )
