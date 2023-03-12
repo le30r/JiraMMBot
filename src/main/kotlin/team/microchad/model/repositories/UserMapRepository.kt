@@ -14,7 +14,7 @@ class UserMapRepository : CrudRepository<UserMap, String> {
         UsersMap.select(UsersMap.mmUsername eq primaryKey).map(::mapRowToUserMap).firstOrNull()
     }
 
-    suspend fun  findByMmUsername(mmUsername: String): UserMap? = dbQuery {
+    suspend fun findByMmUsername(mmUsername: String): UserMap? = dbQuery {
         UsersMap.select(UsersMap.mmUsername eq mmUsername).map(::mapRowToUserMap).firstOrNull()
     }
 
