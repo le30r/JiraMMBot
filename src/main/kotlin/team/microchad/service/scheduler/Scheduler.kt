@@ -6,8 +6,10 @@ import kjob.core.kjob
 import kjob.jdbi.JdbiKJob
 import kjob.kron.Kron
 import kjob.kron.KronModule
+
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+
 import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
 import team.microchad.model.entities.ProjectMap
@@ -18,6 +20,7 @@ import team.microchad.service.getOutgoingMessageForIssues
 
 val scheduler = kjob(JdbiKJob) {
     connectionString = with(Secrets) {
+        //TODO may be connection string move to Secrets?
         "jdbc:postgresql://$dbHost:$dbPort/kjob?user=$dbLogin&password=$dbPassword" // JDBC connection string
     }
 
@@ -40,22 +43,20 @@ class MessageJob(name: String, private val schedulerSlot: SchedulerSlot, private
     private val jiraClient: JiraClient by inject()
     private val mmClient: MmClient by inject()
     private val repository: ProjectMapRepository by inject()
-    suspend fun sendMessageWithResultOfJql() =
-        sendMessage(when (schedulerSlot) {
-            (SchedulerSlot.MONDAY) -> {
-                repository.findAll().filter { it.monday }
-            }
-            (SchedulerSlot.FRIDAY
-                    ) -> {
-                repository.findAll().filter { it.friday }
-            }
-            (SchedulerSlot.DAILY) -> {
-                repository.findAll().filter { it.everyday }
-            }
-            else -> {
-                emptyList()
-            }
-        })
+    suspend fun sendMessageWithResultOfJql() = sendMessage(when (schedulerSlot) {
+        (SchedulerSlot.MONDAY) -> {
+            repository.findAll().filter { it.monday }
+        }
+        (SchedulerSlot.FRIDAY) -> {
+            repository.findAll().filter { it.friday }
+        }
+        (SchedulerSlot.DAILY) -> {
+            repository.findAll().filter { it.everyday }
+        }
+        else -> {
+            emptyList()
+        }
+    })
 
 
     private suspend fun sendMessage(projects: List<ProjectMap>) {

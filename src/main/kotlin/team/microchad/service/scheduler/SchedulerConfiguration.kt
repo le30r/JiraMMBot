@@ -1,7 +1,6 @@
 package team.microchad.service.scheduler
 
 
-
 enum class SchedulerSlot(val cronExpression: String) {
     MONDAY("0 0 6 ? * 2"),
     FRIDAY("0 0 15 ? * 6"),

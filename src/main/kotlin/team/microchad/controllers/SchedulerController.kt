@@ -34,7 +34,7 @@ class SchedulerController : KoinComponent {
         val projects = jiraClient.getProjects()
         val entity = projectMapRepository.findById(incomingMsg.channelId)
         return if (entity != null) {
-            val dialog = createSchedulerDialog(incomingMsg.triggerId, projects, entity)
+            val dialog = createSchedulerDialog(incomingMsg.triggerId, entity)
             mmClient.openDialog(dialog)
             ActionResponse(CONTINUE_SETTING_IN_DIALOG_WINDOW)
         } else {

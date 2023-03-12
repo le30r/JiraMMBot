@@ -22,6 +22,7 @@ fun getIssuesWithStatus(status: String): String {
 fun getIssuesWithStatusByProject(status: String, project: String): String {
     return "status=\"$status\"&fields=id,key,summary,updated, description, project, issue_type".toUrlForm()
 }
+
 fun getIssuesByStatusExprAndProject(statusExpr: String, project: String): String {
     return "status$statusExpr and project=\"$project\"&fields=id,key,summary,updated, description, project, issue_type".toUrlForm()
 }
