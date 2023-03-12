@@ -1,6 +1,9 @@
 package team.microchad.service
 
+import org.koin.java.KoinJavaComponent.inject
+import team.microchad.config.JiraConfiguration
 import team.microchad.dto.jira.Issue
+import team.microchad.dto.jira.JiraJqlResponse
 import team.microchad.dto.mm.OutgoingMsg
 
 fun getOutgoingMessageForIssues(channelId: String, issues: Array<Issue>?): OutgoingMsg {
@@ -48,8 +51,7 @@ fun getMarkdownTableForIssues(issues: Array<Issue>): String =
                         column {
                             markdown {
                                 bold {
-                                    //TODO: make link to issue (right now it redirects to Jira REST API
-                                    "[Go to...]($self)"
+                                    "[Go to...](http://${JiraConfiguration().baseUrl}/browse/$key)"
                                 }
                             }
                         }
