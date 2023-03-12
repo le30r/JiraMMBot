@@ -4,14 +4,14 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Action(
-   val id: String,
-   val name: String,
-   val integration: Integration
+    val id: String,
+    val name: String,
+    val integration: Integration
 )
 
 @Serializable
 data class ActionResponse(
-   val ephemeralText: String
+    val ephemeralText: String
 )
 
 

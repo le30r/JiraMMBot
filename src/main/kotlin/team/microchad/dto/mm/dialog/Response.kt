@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import team.microchad.dto.mm.dialog.submissions.Submission
 
 @Serializable
-data class Response<T: Submission> (
+data class Response<T : Submission>(
     val type: String,
     @SerialName("callback_id")
     val callbackId: String,
