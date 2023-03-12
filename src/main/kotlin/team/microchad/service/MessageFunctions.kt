@@ -4,7 +4,7 @@ import team.microchad.dto.jira.Issue
 import team.microchad.dto.mm.OutgoingMsg
 
 fun getOutgoingMessageForIssues(channelId: String, issues: Array<Issue>?): OutgoingMsg {
-    return if (!issues.isNullOrEmpty() ) OutgoingMsg(channelId, getMarkdownTableForIssues(issues))
+    return if (!issues.isNullOrEmpty()) OutgoingMsg(channelId, getMarkdownTableForIssues(issues))
     else OutgoingMsg(channelId, getMarkdownError())
 }
 

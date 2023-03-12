@@ -11,6 +11,7 @@ class JiraConfiguration {
     val issue = "issue"
     val comment = "comment"
     val project = "project"
+    val userSearch = "user/search"
     val botUsername = Secrets.botUsername
     val botPassword = Secrets.botPassword
 }

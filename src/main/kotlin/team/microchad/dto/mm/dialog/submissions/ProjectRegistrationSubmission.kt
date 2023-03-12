@@ -5,4 +5,4 @@ import kotlinx.serialization.Serializable
 @Serializable
 class ProjectRegistrationSubmission(
     val selectProject: String
-): Submission()
+) : Submission()

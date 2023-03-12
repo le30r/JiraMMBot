@@ -8,7 +8,6 @@ import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 
 import team.microchad.client.JiraClient
-import team.microchad.client.MmClient
 import team.microchad.controllers.IssueController
 import team.microchad.controllers.RegistrationController
 import team.microchad.controllers.SchedulerController
@@ -16,15 +15,11 @@ import team.microchad.controllers.StatisticsController
 import team.microchad.dto.mm.IncomingMsg
 import team.microchad.dto.mm.dialog.Response
 import team.microchad.dto.mm.dialog.submissions.*
-import team.microchad.model.repositories.ProjectMapRepository
-import team.microchad.service.*
+import team.microchad.service.createJiraBotMessage
 
 
 fun Application.configureRouting() {
-    val mmClient: MmClient by inject()
     val jiraClient: JiraClient by inject()
-    val userService: UserService by inject()
-    val projectMapRepository: ProjectMapRepository by inject()
 
     val registrationController: RegistrationController by inject()
     val statisticsController: StatisticsController by inject()
@@ -66,7 +61,6 @@ fun Application.configureRouting() {
         }
 
         post("/statistics_dialog") {
-            //TODO: Change endpoint after testing, move code into another class or fun
             val incoming = call.receive<IncomingMsg>()
             val actionResponse = statisticsController.openDialog(incoming)
             call.respond(actionResponse)
@@ -85,7 +79,7 @@ fun Application.configureRouting() {
 
         post("/issue") {
             val incoming = call.receive<Response<StatisticsSubmission>>()
-
+//TODO Delete it or smth else?
 //            call.respond()
         }
 
@@ -110,8 +104,9 @@ fun Application.configureRouting() {
         }
 
         post("/comment") {
+            //TODO check line 83
             val result = call.receive<Response<CommentSubmission>>()
-            jiraClient.commentIssue(result.submission?.issue?:"", result.submission?.comment?:"")
+            jiraClient.commentIssue(result.submission?.issue ?: "", result.submission?.comment ?: "")
         }
 
     }

@@ -4,7 +4,6 @@ import kotlinx.serialization.Serializable;
 
 @Serializable
 class CommentSubmission(
-        val issue : String,
-        val comment : String
-) : Submission() {
-}
+    val issue: String,
+    val comment: String
+) : Submission()

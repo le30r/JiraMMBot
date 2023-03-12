@@ -19,26 +19,39 @@ private fun createAttachmentForJiraBot(): Array<Attachment> = arrayOf(
 )
 
 private fun createActionsForJiraBot(): Array<Action> = arrayOf(
-    Action(
-        "register", "Bind user to Jira", Integration(
-            "${Secrets.botHost}/register_dialog"
-        )
-    ), Action(
-        "stats", "Get statistics", Integration(
-            "${Secrets.botHost}/statistics_dialog"
-        )
-    ), Action(
-        "scheduler", "Scheduler settings", Integration(
-            "${Secrets.botHost}/scheduler_dialog"
-        )
-    ), Action(
-        "registerProject", "Bind project to channel", Integration(
-            "${Secrets.botHost}/register-project_dialog"
-        )
-    ),
-    Action(
-        "commentIssue", "Comment issue", Integration(
-            "${Secrets.botHost}/comment_dialog"
-        )
+    registerAction(),
+    getStatisticsAction(),
+    schedulerSettingsAction(),
+    registerProjectAction(),
+    commentIssueAction()
+)
+
+private fun registerAction() = Action(
+    "register", "Bind user to Jira", Integration(
+        "${Secrets.botHost}/register_dialog"
+    )
+)
+
+private fun getStatisticsAction() = Action(
+    "stats", "Get statistics", Integration(
+        "${Secrets.botHost}/statistics_dialog"
+    )
+)
+
+private fun schedulerSettingsAction() = Action(
+    "scheduler", "Scheduler settings", Integration(
+        "${Secrets.botHost}/scheduler_dialog"
+    )
+)
+
+private fun registerProjectAction() = Action(
+    "registerProject", "Bind project to channel", Integration(
+        "${Secrets.botHost}/register-project_dialog"
+    )
+)
+
+private fun commentIssueAction() = Action(
+    "commentIssue", "Comment issue", Integration(
+        "${Secrets.botHost}/comment_dialog"
     )
 )

@@ -16,6 +16,12 @@ import team.microchad.service.UserService
 import team.microchad.service.createRegisterJiraDialog
 import team.microchad.service.createRegisterProjectDialog
 
+private const val CONTINUE_IN_DIALOG_MESSAGE = "Continue registration in dialog window"
+
+private const val REGISTRATION_SUCCESSFULLY = "Registration successfully"
+
+private const val REGISTRATION_CANCELED = "Registration canceled"
+
 class RegistrationController : KoinComponent {
 
     private val mmClient: MmClient by inject()
@@ -26,15 +32,15 @@ class RegistrationController : KoinComponent {
     suspend fun openUserDialog(incomingMessage: IncomingMsg): ActionResponse {
         val users = jiraClient.getUsers()
         val dialog = createRegisterJiraDialog(incomingMessage.triggerId, users)
-        val response = mmClient.openDialog(dialog)
-        return ActionResponse("Continue registration in dialog window")
+        mmClient.openDialog(dialog)
+        return ActionResponse(CONTINUE_IN_DIALOG_MESSAGE)
     }
 
-    suspend fun openProjectDialog(incomingMessage: IncomingMsg):ActionResponse {
+    suspend fun openProjectDialog(incomingMessage: IncomingMsg): ActionResponse {
         val projects = jiraClient.getProjects()
         val dialog = createRegisterProjectDialog(incomingMessage.triggerId, projects)
-        val response = mmClient.openDialog(dialog)
-        return ActionResponse("Continue registration in dialog window")
+        mmClient.openDialog(dialog)
+        return ActionResponse(CONTINUE_IN_DIALOG_MESSAGE)
     }
 
     suspend fun registerUser(result: Response<SelectionSubmission>): ActionResponse {
@@ -42,16 +48,16 @@ class RegistrationController : KoinComponent {
             with(result) {
                 userService.registerUser(userId, submission!!.jiraUser)
             }
-            ActionResponse("Registration successfully")
+            ActionResponse(REGISTRATION_SUCCESSFULLY)
         } else {
-            ActionResponse("Registration canceled")
+            ActionResponse(REGISTRATION_CANCELED)
         }
         return returnVal
     }
 
     suspend fun registerProject(result: Response<ProjectRegistrationSubmission>) {
         val project = result.submission?.selectProject
-        projectMapRepository.create(ProjectMap(project?: "", result.channelId))
+        projectMapRepository.create(ProjectMap(project ?: "", result.channelId))
         println(project.toString())
     }
 }
