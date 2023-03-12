@@ -21,19 +21,23 @@ import team.microchad.dto.jira.*
 import team.microchad.exceptions.JiraBadRequestException
 
 
+private const val JQL_PARAMETER_KEY = "jql"
+
+private const val JIRA_BAD_REQUEST_MESSAGE = "Jira return \"%s\" status code. Check if the request is correct."
+
+private const val USERNAME_PARAMETER_KEY = "username"
+
 class JiraClient : KoinComponent {
 
     private val configuration: JiraConfiguration by inject()
 
     suspend fun getByJql(jql: String): JiraJqlResponse {
         val params = Parameters.build {
-            append("jql", jql)
+            append(JQL_PARAMETER_KEY, jql)
         }
         val response = httpResponseByJiraWithEncodedParams(configuration.searchJql, params)
-        if (response.status == HttpStatusCode.OK)
-            return response.body()
-        else
-            throw JiraBadRequestException("Jira return ${response.status}. Check if the request is correct.")
+        if (response.status == HttpStatusCode.OK) return response.body()
+        else throw JiraBadRequestException(JIRA_BAD_REQUEST_MESSAGE.format(response.status.toString()))
     }
 
     suspend fun createIssue(issueDto: Issue): Boolean {
@@ -73,10 +77,7 @@ class JiraClient : KoinComponent {
                 host = configuration.baseUrl
                 with(configuration) {
                     appendPathSegments(
-                        apiPath,
-                        issue,
-                        issueKey,
-                        comment
+                        apiPath, issue, issueKey, comment
                     )
                 }
                 setBody(Comment(body = newComment, visibility = null))
@@ -88,29 +89,23 @@ class JiraClient : KoinComponent {
 
     suspend fun getStatuses(): Array<Status> {
         val response = httpResponseByJira(configuration.status)
-        if (response.status == HttpStatusCode.OK)
-            return response.body()
-        else
-            throw JiraBadRequestException("Jira return ${response.status}. Check if the request is correct.")
+        if (response.status == HttpStatusCode.OK) return response.body()
+        else throw JiraBadRequestException(JIRA_BAD_REQUEST_MESSAGE.format(response.status.toString()))
     }
 
     suspend fun getProjects(): Array<Project> {
         val response = httpResponseByJira(configuration.project)
-        if (response.status == HttpStatusCode.OK)
-            return response.body()
-        else
-            throw JiraBadRequestException("Jira return ${response.status}. Check if the request is correct.")
+        if (response.status == HttpStatusCode.OK) return response.body()
+        else throw JiraBadRequestException(JIRA_BAD_REQUEST_MESSAGE.format(response.status.toString()))
     }
 
     suspend fun getUsers(): Array<User> {
         val params = Parameters.build {
-            append("username", ".")
+            append(USERNAME_PARAMETER_KEY, ".")
         }
-        val response = httpResponseByJiraWithEncodedParams("user/search", params)
-        if (response.status == HttpStatusCode.OK)
-            return response.body()
-        else
-            throw JiraBadRequestException("Jira return ${response.status}. Check if the request is correct.")
+        val response = httpResponseByJiraWithEncodedParams(configuration.userSearch, params)
+        if (response.status == HttpStatusCode.OK) return response.body()
+        else throw JiraBadRequestException(JIRA_BAD_REQUEST_MESSAGE.format(response.status.toString()))
     }
 
     private val client = HttpClient(Java) {
