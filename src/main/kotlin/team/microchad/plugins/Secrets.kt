@@ -8,6 +8,7 @@ object Secrets {
     lateinit var botPassword: String
     lateinit var botToken: String
     lateinit var botHost: String
+
     //TODO: May be move db setting into another object?
     lateinit var dbHost: String
     lateinit var dbPort: String

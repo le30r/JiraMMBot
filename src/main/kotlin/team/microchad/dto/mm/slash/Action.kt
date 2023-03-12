@@ -13,12 +13,3 @@ data class Action(
 data class ActionResponse(
     val ephemeralText: String
 )
-
-
-//{
-//  "update": {
-//    "message": "Updated!",
-//    "props": {}
-//  },
-//  "ephemeral_text": "You updated the post!"
-//}

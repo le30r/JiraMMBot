@@ -13,13 +13,13 @@ import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
 import team.microchad.config.JiraConfiguration
 import team.microchad.config.MattermostConfiguration
-import team.microchad.model.repositories.UserMapRepository
-import team.microchad.model.repositories.ProjectMapRepository
-import team.microchad.service.UserService
-import team.microchad.controllers.StatisticsController
+import team.microchad.controllers.IssueController
 import team.microchad.controllers.RegistrationController
 import team.microchad.controllers.SchedulerController
-import team.microchad.controllers.IssueController
+import team.microchad.controllers.StatisticsController
+import team.microchad.model.repositories.ProjectMapRepository
+import team.microchad.model.repositories.UserMapRepository
+import team.microchad.service.UserService
 
 fun Application.configureDI() {
     install(Koin) {
