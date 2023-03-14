@@ -77,19 +77,9 @@ fun Application.configureRouting() {
             call.respond(issueController.commentIssueDialog(incoming))
         }
 
-        post("/issue") {
-            val incoming = call.receive<Response<StatisticsSubmission>>()
-//TODO Delete it or smth else?
-//            call.respond()
-        }
-
         post("/statistics") {
             val incoming = call.receive<Response<StatisticsSubmission>>()
             statisticsController.sendStatistics(incoming)
-        }
-
-        post("/dialog") {
-            println(call.receiveText())
         }
 
         post("/scheduler") {
@@ -104,7 +94,6 @@ fun Application.configureRouting() {
         }
 
         post("/comment") {
-            //TODO check line 83
             val result = call.receive<Response<CommentSubmission>>()
             jiraClient.commentIssue(result.submission?.issue ?: "", result.submission?.comment ?: "")
         }
