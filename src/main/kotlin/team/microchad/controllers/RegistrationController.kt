@@ -24,6 +24,10 @@ private const val REGISTRATION_SUCCESSFULLY = "Registration successfully"
 
 private const val REGISTRATION_ERROR = "Registration canceled. Please, try again later"
 
+private const val PROJECT_REGISTER_SUCCESS = "Your project successfully registered"
+
+private const val PROJECT_ALREADY_BOUND = "Your channel already bound"
+
 class RegistrationController : KoinComponent {
 
     private val mmClient: MmClient by inject()
@@ -73,12 +77,12 @@ class RegistrationController : KoinComponent {
             projectMapRepository.create(ProjectMap(project ?: "", result.channelId))
             OutgoingMsg(
                 directChannel,
-                "Your project successfully registered"
+                PROJECT_REGISTER_SUCCESS
             )
         } catch (e: Exception) {
             OutgoingMsg(
                 directChannel,
-                "Your channel already bound"
+                PROJECT_ALREADY_BOUND
             )
         }
         mmClient.sendToDirectChannel(message)

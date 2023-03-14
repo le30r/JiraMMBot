@@ -19,6 +19,8 @@ private const val OPEN_PROJECT_DIALOG_RESPONSE = "Comment in dialog window"
 
 private const val ERROR_NULL_PROJECT_MESSAGE = "Error! You need bind chat to project first!"
 
+private const val COMMENTED_SUCCESSFULLY = "Commented successfully!"
+
 class IssueController : KoinComponent {
     private val mmClient: MmClient by inject()
     private val jiraClient: JiraClient by inject()
@@ -47,9 +49,9 @@ class IssueController : KoinComponent {
     suspend fun commentIssue(result: Response<CommentSubmission>): ActionResponse{
         jiraClient.commentIssue(result.submission?.issue ?: "", result.submission?.comment ?: "")
         val directChannel = mmClient.createDirectChannel(result.userId)
-        val message = OutgoingMsg(directChannel, "Commented successfully!")
+        val message = OutgoingMsg(directChannel, COMMENTED_SUCCESSFULLY)
         mmClient.sendToDirectChannel(message)
-        return ActionResponse("Commented successfully!")
+        return ActionResponse(COMMENTED_SUCCESSFULLY)
     }
 
 }

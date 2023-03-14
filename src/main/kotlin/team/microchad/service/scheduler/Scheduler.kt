@@ -20,7 +20,6 @@ import team.microchad.service.getOutgoingMessageForIssues
 
 val scheduler = kjob(JdbiKJob) {
     connectionString = with(Secrets) {
-        //TODO may be connection string move to Secrets?
         "jdbc:postgresql://$dbHost:$dbPort/kjob?user=$dbLogin&password=$dbPassword" // JDBC connection string
     }
 
