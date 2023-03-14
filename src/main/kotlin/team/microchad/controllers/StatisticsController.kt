@@ -40,7 +40,7 @@ class StatisticsController : KoinComponent {
         }
         val channelId = mmClient.createDirectChannel(incoming.userId)
         val responseJira = jiraClient.getByJql(jqlRequest)
-        val outgoingMessage = getOutgoingMessageForIssues(channelId, responseJira.issues)
+        val outgoingMessage = getOutgoingMessageForIssues(channelId, responseJira.issues, status.orEmpty())
         mmClient.sendToDirectChannel(outgoingMessage)
     }
 }

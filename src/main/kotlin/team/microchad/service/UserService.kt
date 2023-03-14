@@ -10,10 +10,10 @@ class UserService : KoinComponent {
     private val repository: UserMapRepository by inject()
 
     suspend fun registerUser(userId: String, jiraUserId: String) {
-        UserMapRepository().create(UserMap(mmUsername = userId, jiraUsername = jiraUserId))
+        repository.create(UserMap(mmUsername = userId, jiraUsername = jiraUserId))
     }
 
     suspend fun getJiraUsername(mmUsername: String): String {
-        return UserMapRepository().findById(mmUsername)?.jiraUsername.orEmpty()
+        return repository.findById(mmUsername)?.jiraUsername.orEmpty()
     }
 }
