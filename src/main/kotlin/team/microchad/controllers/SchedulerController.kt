@@ -3,7 +3,6 @@ package team.microchad.controllers
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
 import team.microchad.dto.mm.IncomingMsg
 import team.microchad.dto.mm.OutgoingMsg
@@ -26,12 +25,10 @@ private const val SETTINGS_CHANGED = "Settings changed"
 class SchedulerController : KoinComponent {
 
     private val mmClient: MmClient by inject()
-    private val jiraClient: JiraClient by inject()
     private val projectMapRepository: ProjectMapRepository by inject()
 
 
     suspend fun openDialog(incomingMsg: IncomingMsg): ActionResponse {
-        val projects = jiraClient.getProjects()
         val entity = projectMapRepository.findById(incomingMsg.channelId)
         return if (entity != null) {
             val dialog = createSchedulerDialog(incomingMsg.triggerId, entity)

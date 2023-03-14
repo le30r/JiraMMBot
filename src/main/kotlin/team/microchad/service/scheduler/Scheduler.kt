@@ -63,8 +63,7 @@ class MessageJob(name: String, private val schedulerSlot: SchedulerSlot, private
         for (project in projects) {
             val jql = getIssuesByStatusExprAndProject(statusExpression, project.project)
             val result = jiraClient.getByJql(jql)
-
-            val msg = getOutgoingMessageForIssues(project.chat, result.issues)
+            val msg = getOutgoingMessageForIssues(project.chat, result.issues, statusExpression)
             val serverResponse = mmClient.sendToDirectChannel(msg)
             println(serverResponse)
         }
