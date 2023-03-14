@@ -61,6 +61,7 @@ class RegistrationController : KoinComponent {
                     REGISTRATION_ERROR
                 )
             }
+            ActionResponse(REGISTRATION_SUCCESSFULLY)
         }
         mmClient.sendToDirectChannel(message)
         return ActionResponse(CONTINUE_IN_DIRECT_CHANNEL)
@@ -70,7 +71,7 @@ class RegistrationController : KoinComponent {
         val project = result.submission?.selectProject
         val directChannel = mmClient.createDirectChannel(result.userId)
         val message = try {
-            projectMapRepository.create(ProjectMap(project ?: "", result.channelId))
+            projectMapRepository.mapProjectAndChat(ProjectMap(project ?: "", result.channelId))
             OutgoingMsg(
                 directChannel,
                 "Your project successfully registered"
