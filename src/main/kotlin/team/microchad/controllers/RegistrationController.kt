@@ -57,7 +57,7 @@ class RegistrationController : KoinComponent {
 
     suspend fun registerProject(result: Response<ProjectRegistrationSubmission>) {
         val project = result.submission?.selectProject
-        projectMapRepository.create(ProjectMap(project ?: "", result.channelId))
+        projectMapRepository.mapProjectAndChat(ProjectMap(project ?: "", result.channelId))
         println(project.toString())
     }
 }

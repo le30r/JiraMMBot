@@ -2,6 +2,7 @@ package team.microchad.model.repositories
 
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.postgresql.util.PSQLException
 import team.microchad.model.entities.ProjectMap
 import team.microchad.model.entities.ProjectsMap
 
@@ -28,15 +29,29 @@ class ProjectMapRepository : CrudRepository<ProjectMap, String> {
         } > 0
     }
 
+    private suspend fun setProject(entity: ProjectMap): Boolean = dbQuery {
+        ProjectsMap.update({ ProjectsMap.chat eq entity.chat }) {
+            it[project] = entity.project
+            it[chat] = entity.chat
+        } > 0
+    }
+
+    suspend fun mapProjectAndChat(entity: ProjectMap): Boolean = dbQuery {
+        if (ProjectsMap.select(ProjectsMap.chat eq entity.chat).none()) {
+            create(entity)
+        } else {
+            setProject(entity)
+        }
+    }
+
     override suspend fun create(entity: ProjectMap): Boolean = dbQuery {
-        val statement = ProjectsMap.insert {
+        ProjectsMap.insert {
             it[project] = entity.project
             it[chat] = entity.chat
             it[monday] = entity.monday
             it[friday] = entity.friday
             it[everyday] = entity.everyday
         }
-        if (statement.resultedValues.isNullOrEmpty()) return@dbQuery update(entity.chat, entity)
         return@dbQuery true
     }
 
