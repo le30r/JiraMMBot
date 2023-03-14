@@ -7,6 +7,8 @@ import team.microchad.client.JiraClient
 import team.microchad.client.MmClient
 import team.microchad.dto.mm.IncomingMsg
 import team.microchad.dto.mm.OutgoingMsg
+import team.microchad.dto.mm.dialog.Response
+import team.microchad.dto.mm.dialog.submissions.CommentSubmission
 import team.microchad.dto.mm.slash.ActionResponse
 import team.microchad.model.repositories.ProjectMapRepository
 import team.microchad.service.createChooseProjectDialog
@@ -40,6 +42,14 @@ class IssueController : KoinComponent {
             mmClient.openDialog(dialog)
         }
         return ActionResponse(OPEN_PROJECT_DIALOG_RESPONSE)
+    }
+
+    suspend fun commentIssue(result: Response<CommentSubmission>): ActionResponse{
+        jiraClient.commentIssue(result.submission?.issue ?: "", result.submission?.comment ?: "")
+        val directChannel = mmClient.createDirectChannel(result.userId)
+        val message = OutgoingMsg(directChannel, "Commented successfully!")
+        mmClient.sendToDirectChannel(message)
+        return ActionResponse("Commented successfully!")
     }
 
 }

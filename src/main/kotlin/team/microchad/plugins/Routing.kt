@@ -7,7 +7,6 @@ import io.ktor.server.routing.*
 
 import org.koin.ktor.ext.inject
 
-import team.microchad.client.JiraClient
 import team.microchad.controllers.IssueController
 import team.microchad.controllers.RegistrationController
 import team.microchad.controllers.SchedulerController
@@ -19,8 +18,6 @@ import team.microchad.service.createJiraBotMessage
 
 
 fun Application.configureRouting() {
-    val jiraClient: JiraClient by inject()
-
     val registrationController: RegistrationController by inject()
     val statisticsController: StatisticsController by inject()
     val schedulerController: SchedulerController by inject()
@@ -95,7 +92,8 @@ fun Application.configureRouting() {
 
         post("/comment") {
             val result = call.receive<Response<CommentSubmission>>()
-            jiraClient.commentIssue(result.submission?.issue ?: "", result.submission?.comment ?: "")
+            val actionResponse = issueController.commentIssue(result)
+            call.respond(actionResponse)
         }
 
     }

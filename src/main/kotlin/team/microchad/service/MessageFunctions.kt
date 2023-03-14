@@ -6,21 +6,24 @@ import team.microchad.dto.jira.Issue
 import team.microchad.dto.jira.JiraJqlResponse
 import team.microchad.dto.mm.OutgoingMsg
 
-fun getOutgoingMessageForIssues(channelId: String, issues: Array<Issue>?): OutgoingMsg {
-    return if (!issues.isNullOrEmpty()) OutgoingMsg(channelId, getMarkdownTableForIssues(issues))
-    else OutgoingMsg(channelId, getMarkdownError())
+fun getOutgoingMessageForIssues(channelId: String, issues: Array<Issue>?, status: String): OutgoingMsg {
+    return if (!issues.isNullOrEmpty()) OutgoingMsg(channelId, getMarkdownTableForIssues(issues, status))
+    else OutgoingMsg(channelId, getMarkdownError(status))
 }
 
-fun getMarkdownError(): String =
+fun getMarkdownError(status: String): String =
     markdown {
         h3 {
-            "No issues found in Jira. Enjoy your day :grin: or check your input :no_mouth:"
+            "No issues with status $status found in Jira. Enjoy your day :grin: or check your input :no_mouth:"
         }
     }
 
 
-fun getMarkdownTableForIssues(issues: Array<Issue>): String =
+fun getMarkdownTableForIssues(issues: Array<Issue>, status: String): String =
     markdown {
+        h1{
+            "Issues with status $status:"
+        }
         table {
             headerRow {
                 column {
