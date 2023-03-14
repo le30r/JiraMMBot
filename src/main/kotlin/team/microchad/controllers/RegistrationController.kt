@@ -62,8 +62,6 @@ class RegistrationController : KoinComponent {
                 )
             }
             ActionResponse(REGISTRATION_SUCCESSFULLY)
-        } else {
-            ActionResponse(REGISTRATION_CANCELED)
         }
         mmClient.sendToDirectChannel(message)
         return ActionResponse(CONTINUE_IN_DIRECT_CHANNEL)
